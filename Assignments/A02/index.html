@@ -1,1 +1,238 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+    <title>Phaser - Making your first game, part 10</title>
+    <script src="assets/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
 
+<script type="text/javascript">
+var config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 },
+            debug: false
+        }
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+};
+var player;
+var pokeballs;
+var bombs;
+var platforms;
+var cursors;
+var keepPlay = true;
+var score = 0;
+var deathCount = 0;
+var gameOver = false;
+var scoreText;
+var deathText;
+var timer;
+var timerEvent;
+var timeText;
+var balls = ['pokeball', 'greatball', 'ultraball', 'masterball']
+var game = new Phaser.Game(config);
+function preload ()
+{
+    this.load.image('sky', 'assets/sky.png');
+    this.load.image('ground', 'assets/platform.png');
+    this.load.image('pokeball', 'assets/pokeball1.png');
+    this.load.image('greatball', 'assets/pokeball2.png');
+    this.load.image('ultraball', 'assets/pokeball3.png');
+    this.load.image('masterball', 'assets/pokeball4.png');
+    this.load.image('bomb', 'assets/bomb.png');
+    this.load.audio('bomb', 'assets/EXPLODE.wav');
+    this.load.audio('collection', 'assets/LITBEAM2.wav');
+    this.load.audio('walk', 'assets/footsteps.mp3');
+    this.load.audio('end', 'assets/gameOver.mp3');
+    this.load.audio('theme', 'assets/pokemon_theme.mp3');
+    this.load.spritesheet('nurse', 'assets/nurse_joy.png', { frameWidth: 68, frameHeight: 72 });
+}
+function create ()
+{
+    //  A simple background for our game
+    this.add.image(400, 300, 'sky');
+    //  The platforms group contains the ground and the 2 ledges we can jump on
+    platforms = this.physics.add.staticGroup();
+    //  Here we create the ground.
+    //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+    platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+    //  Now let's create some ledges
+    platforms.create(600, 400, 'ground');
+    platforms.create(50, 250, 'ground');
+    platforms.create(750, 220, 'ground');
+    // The player and its settings
+    player = this.physics.add.sprite(100, 450, 'nurse');
+    //  Player physics properties. Give the little guy a slight bounce.
+    player.setBounce(0.2);
+    player.setCollideWorldBounds(true);
+    //Add sound effectS
+    this.bombSound = this.sound.add("bomb");
+    this.collectionSound = this.sound.add("collection");
+    this.walkSound = this.sound.add("walk");
+    this.endSound = this.sound.add("end");
+    this.themeSound = this.sound.add("theme");
+    // Plays theme
+    this.themeSound.play();
+    //  Our player animations, turning, walking left and walking right.
+    this.anims.create({
+        key: 'left',
+        frames: this.anims.generateFrameNumbers('nurse', { start: 4, end: 7 }),
+        frameRate: 10,
+        repeat: -1
+    });
+    this.anims.create({
+        key: 'turn',
+        frames: [ { key: 'nurse', frame: 0 } ],
+        frameRate: 20
+    });
+    this.anims.create({
+        key: 'right',
+        frames: this.anims.generateFrameNumbers('nurse', { start: 8, end: 11 }),
+        frameRate: 10,
+        repeat: -1
+    });
+    //  Input Events
+    cursors = this.input.keyboard.createCursorKeys();
+    //  Some pokeballs to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
+    pokeballs = this.physics.add.group();
+    x = 12;
+    y = 0;
+    for(i = 0; i < 12; i++)
+    {
+        y = 0;
+        pokeballs.create(x, y, balls[Math.floor(Math.random() *balls.length)])
+        x +=70;
+    }
+    
+    pokeballs.children.iterate(function (child) {
+        //  Give each pokeball a slightly different bounce
+        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+    });
+    bombs = this.physics.add.group();
+    //  The score display
+    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+	
+    //  The death count display
+    deathText = this.add.text(550, 500, 'deaths: 0', { fontSize: '32px', fill: '#000' });
+    //The timer display
+    timeText = this.add.text(500, 16, 'game end: ', { fontSize: '32px', fill: '#000' });
+    timedEvent = this.time.delayedCall(120000, onEvent, [], this);
+    //  Collide the player and the pokeballs with the platforms
+    this.physics.add.collider(player, platforms);
+    this.physics.add.collider(pokeballs, platforms);
+    this.physics.add.collider(bombs, platforms);
+    //  Checks to see if the player overlaps with any of the pokeballs, if he does call the collectBall function
+    this.physics.add.overlap(player, pokeballs, collectBall, null, this);
+    this.physics.add.collider(player, bombs, hitBomb, null, this);
+}
+function update ()
+{
+    //display the time
+    var number = 120 - timedEvent.getElapsedSeconds();
+    var roundedNumber = Math.round(number);
+    if(roundedNumber > 60){
+        timeText.setText('game end: 01:' + (roundedNumber - 60));
+    }
+    else if(roundedNumber < 10){
+        timeText.setText('game end: 00:0' + roundedNumber);
+    }
+    else
+        timeText.setText('game end: 00:' + roundedNumber);
+	
+    if (gameOver)
+    {
+        return;
+    }
+	
+    //move the player
+    if (cursors.left.isDown && keepPlay)
+    {
+        player.setVelocityX(-160);
+        player.anims.play('left', true);
+        //this.walkSound.play();
+    }
+    else if (cursors.right.isDown && keepPlay)
+    {
+        player.setVelocityX(160);
+        player.anims.play('right', true);
+        //this.walkSound.play();
+    }
+    else
+    {
+        player.setVelocityX(0);
+        player.anims.play('turn');
+    }
+    if (cursors.up.isDown && player.body.touching.down)
+    {
+        player.setVelocityY(-330);
+    }
+}
+function collectBall (player, pokeball)
+{
+    this.collectionSound.play();
+    pokeball.disableBody(true, true);
+    //Add and update the score
+    score += 10;
+    scoreText.setText('score: ' + score);
+    if (pokeballs.countActive(true) === 0)
+    {
+        //  A new batch of pokeballs to collect
+        pokeballs.children.iterate(function (child) {
+            child.enableBody(true, child.x, 0, true, true);
+        });
+        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+        var bomb = bombs.create(x, 16, 'bomb');
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        bomb.allowGravity = false;
+    }
+}
+function hitBomb (player, bomb)
+{
+    this.bombSound.play();
+    //Add and update the death count
+    deathCount += 1;
+    deathText.setText('deaths: ' + deathCount);
+	
+    //Reset the score to zero	
+    score = 0;
+    scoreText.setText('score: ' + score);
+}
+function onEvent ()
+{
+    this.themeSound.stop();
+    this.endSound.play();
+    console.log("game ended"); 
+    this.physics.pause();
+    var endText = this.add.text(30, 100, 'GAME OVER', { fontSize: '135px', fill: '#FFFFFF' });
+    endText = this.add.text(175, 250, 'score: ', { fontSize: '60px', fill: '#FFFFFF' });
+    endText.setText('End score: ' + score);
+    endText = this.add.text(175, 310, '- deaths: ', { fontSize: '60px', fill: '#FFFFFF' });
+    endText.setText('- deaths: ' + deathCount);
+    endText = this.add.text(175, 310, '_______________________________', { fontSize: '60px', fill: '#FFFFFF' });
+    
+    endText = this.add.text(175, 370, 'Final score: ', { fontSize: '60px', fill: '#FFFFFF' });
+    endText.setText('Final score: ' + (score - deathCount));
+    player.setTint(0xff0000);
+    keepPlay = false;
+}
+</script>
+
+</body>
+</html>
