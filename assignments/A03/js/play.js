@@ -5,6 +5,9 @@ var play = {
 		w = game.width
 		h = game.height
 
+		//array to hold obstacles
+		var obs = ['obstacle', 'obstacle2']
+
 		frame_counter = 0
 
 		// Bg color
@@ -13,7 +16,7 @@ var play = {
 		this.bg = game.add.image(0, 0, 'bg')
 
 		// Platform width
-		platform_width = game.cache.getImage('obstacle').width
+		//platform_width = game.cache.getImage('obstacle').width
 
 		// Score sound
 		this.sound.score = game.add.audio('score')
@@ -59,11 +62,15 @@ var play = {
 
 		// Spawn enemies
 		if (frame_counter % 90 == 0) {
-			var gap = 120
-			var offset = (Math.random() < 0.5 ? -1 : 1) * Math.random() * (150)
-
-			this.spawnObstacle(game.global.obstacle_id++, w / 2 - platform_width / 2 - gap / 2 + offset, game.height, speed = 200, has_given_point = false)
-			this.spawnObstacle(game.global.obstacle_id++, w / 2 + platform_width / 2 + gap / 2 + offset, game.height, speed = 200, has_given_point = true)
+			//var gap = 120
+			if(Math.random() < 0.33)
+			this.spawnObstacle(game.global.obstacle_id++, Math.random() * game.width , game.height, speed = 200, has_given_point = false)
+			else if(Math.random() < .66)
+			this.spawnObstacle2(game.global.obstacle2_id++, Math.random() * game.width , game.height, speed = 200, has_given_point = false)
+			else
+			this.spawnObstacle3(game.global.obstacle3_id++, Math.random() * game.width , game.height, speed = 200, has_given_point = false)
+			//this.spawnObstacle(game.global.obstacle_id++, w / 2 + platform_width / 2 + gap / 2 + offset, game.height, speed = 200, has_given_point = true)
+		//potential way to randomize array: obs[Math.floor(Math.random())]
 		}
 
 		this.move();
@@ -72,8 +79,53 @@ var play = {
 		game.global.score += this.scorePoint();
 	},
 
+	//spawn birds
 	spawnObstacle: function (entity, x, y, speed, has_given_point) {
 		var obstacle = this.obstacles.create(x, y, 'obstacle', entity)
+
+		game.physics.enable(obstacle, Phaser.Physics.ARCADE)
+
+		obstacle.enableBody = true
+		obstacle.body.colliderWorldBounds = true
+		obstacle.body.immovable = true
+		obstacle.anchor.setTo(.5, .5)
+		obstacle.scale.setTo(1, 1)
+		obstacle.body.velocity.y = -speed
+		obstacle.has_given_point = has_given_point
+
+		obstacle.checkWorldBounds = true;
+		// Kill obstacle/enemy if vertically out of bounds
+		obstacle.events.onOutOfBounds.add(this.killObstacle, this);
+
+		obstacle.outOfBoundsKill = true;
+		console.log(this.obstacles);
+	},
+
+	//spawn spaceships
+	spawnObstacle2: function (entity, x, y, speed, has_given_point) {
+		var obstacle = this.obstacles.create(x, y, 'obstacle2', entity)
+
+		game.physics.enable(obstacle, Phaser.Physics.ARCADE)
+
+		obstacle.enableBody = true
+		obstacle.body.colliderWorldBounds = true
+		obstacle.body.immovable = true
+		obstacle.anchor.setTo(.5, .5)
+		obstacle.scale.setTo(1, 1)
+		obstacle.body.velocity.y = -speed
+		obstacle.has_given_point = has_given_point
+
+		obstacle.checkWorldBounds = true;
+		// Kill obstacle/enemy if vertically out of bounds
+		obstacle.events.onOutOfBounds.add(this.killObstacle, this);
+
+		obstacle.outOfBoundsKill = true;
+		console.log(this.obstacles);
+	},
+
+	//spawn rockets
+	spawnObstacle3: function (entity, x, y, speed, has_given_point) {
+		var obstacle = this.obstacles.create(x, y, 'obstacle3', entity)
 
 		game.physics.enable(obstacle, Phaser.Physics.ARCADE)
 
