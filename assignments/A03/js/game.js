@@ -9,7 +9,9 @@ var game = new Phaser.Game(450, 550, Phaser.Canvas, "game")
 game.global = {
 	score: 0,
 	best_score: 0,
-	obstacle_id: 0
+	obstacle_id: 0,
+	obstacle2_id: 0,
+	obstacle3_id: 0
 }
 
 game.state.add("boot", boot)
