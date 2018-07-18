@@ -64,13 +64,31 @@ var play = {
 		if (frame_counter % 90 == 0) {
 			//var gap = 120
 			if(Math.random() < 0.33)
-			this.spawnObstacle(game.global.obstacle_id++, Math.random() * game.width , game.height, speed = 200, has_given_point = false)
-			else if(Math.random() < .66)
-			this.spawnObstacle2(game.global.obstacle2_id++, Math.random() * game.width , game.height, speed = 200, has_given_point = false)
+			this.spawnObstacle(game.global.obstacle_id++, Math.random() * game.width , game.height, speed = (200 + (game.global.score * 5)), has_given_point = true)
+			else if(Math.random() < 0.5)
+			this.spawnObstacle2(game.global.obstacle2_id++, Math.random() * game.width , game.height, speed = (200 + (game.global.score * 5)), has_given_point = true)
 			else
-			this.spawnObstacle3(game.global.obstacle3_id++, Math.random() * game.width , game.height, speed = 200, has_given_point = false)
-			//this.spawnObstacle(game.global.obstacle_id++, w / 2 + platform_width / 2 + gap / 2 + offset, game.height, speed = 200, has_given_point = true)
-		//potential way to randomize array: obs[Math.floor(Math.random())]
+			this.spawnObstacle3(game.global.obstacle3_id++, Math.random() * game.width , game.height, speed = (200 + (game.global.score * 5)), has_given_point = true)
+		}
+
+		if (game.global.score > 10 && frame_counter % 80 == 0) {
+			//var gap = 120
+			if(Math.random() < 0.33)
+			this.spawnObstacle(game.global.obstacle_id++, Math.random() * game.width , game.height, speed = (200 + (game.global.score * 7)), has_given_point = true)
+			else if(Math.random() < 0.5)
+			this.spawnObstacle2(game.global.obstacle2_id++, Math.random() * game.width , game.height, speed = (200 + (game.global.score * 7)), has_given_point = true)
+			else
+			this.spawnObstacle3(game.global.obstacle3_id++, Math.random() * game.width , game.height, speed = (200 + (game.global.score * 7)), has_given_point = true)
+		}
+
+		if (game.global.score > 30 && frame_counter % 70 == 0) {
+			//var gap = 120
+			if(Math.random() < 0.33)
+			this.spawnObstacle(game.global.obstacle_id++, Math.random() * game.width , game.height, speed = (200 + (game.global.score * 10)), has_given_point = true)
+			else if(Math.random() < 0.5)
+			this.spawnObstacle2(game.global.obstacle2_id++, Math.random() * game.width , game.height, speed = (200 + (game.global.score * 10)), has_given_point = true)
+			else
+			this.spawnObstacle3(game.global.obstacle3_id++, Math.random() * game.width , game.height, speed = (200 + (game.global.score * 10)), has_given_point = true)
 		}
 
 		this.move();
@@ -164,8 +182,9 @@ var play = {
 				let oy = obstacles[i].y;
 				let ox = obstacles[i].x;
 
-				//if player is below obstacle and within 5 pixels and choose only one of the pair
-				if (py > oy && Math.abs(py - oy) < 5 && ox < game.width / 2) {
+				//if player is below obstacle score point; set off flag to prevent repeats
+				if (obstacles[i].has_given_point && oy < py) { 
+					obstacles[i].has_given_point = false;
 					point++;
 					this.sound.score.play('', 0, 0.5, false)
 				}
