@@ -12,16 +12,19 @@ var preload = {
 		// game entities/world
 		//this.load.image('player', 'images/player_x1.png')
 		this.load.image('player', 'images/parachute.png')
+		this.load.image('bullet', 'images/bullet.png')
 		this.load.image('obstacle', 'images/flying_bird.png')
 		this.load.image('obstacle2', 'images/ship_1.png')
 		this.load.image('obstacle3', 'images/rocket.png')
 		this.load.image('pause', 'images/pause.png')
 		this.load.image('bg', 'images/cream.png')
+		this.load.image('bg', 'images/explosion.png')
 
 		// audio
 		this.load.audio('bg_spin', 'sounds/spin_bg_music.mp3')
 		this.load.audio('bg_edm', 'sounds/edm_bg_music.mp3')
 		this.load.audio('score', 'sounds/score.wav')
+		this.load.audio('explode', 'sounds/EXPLODE.wav')
 		this.load.audio('kill', 'sounds/Ouch.ogg')
 		this.load.audio('music', 'sounds/abstractionRapidAcrobatics.wav')
 

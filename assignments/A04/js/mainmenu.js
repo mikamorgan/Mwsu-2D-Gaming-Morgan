@@ -10,6 +10,10 @@ var mainMenu = {
 		var w = game.width
 		var h = game.height
 
+		var bullets;
+		var cursors;
+		var fireButton;
+
 		// Title
 		var logo = game.add.bitmapText(w / 2, -100, 'fontUsed', '', 75)
 		logo.text = GAMETITLE

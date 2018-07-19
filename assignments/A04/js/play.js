@@ -34,6 +34,16 @@ var play = {
 		// Obstacles
 		this.obstacles = game.add.group()
 
+		//Bullets group
+		this.bullets = game.add.group();
+		this.bullets.enableBody = true;
+		this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
+ 		this.bullets.createMultiple(10, 'bullet');
+		//this.bullets.setAll('anchor.x', 0.5);
+		//this.bullets.setAll('anchor.y', 1);
+		this.bullets.setAll('outOfBoundsKill', true);
+ 		this.bullets.setAll('checkWorldBounds', true);
+
 		// Player
 		this.player = game.add.sprite(game.width / 2, 250, 'player')
 		game.physics.enable(this.player, Phaser.Physics.ARCADE)
@@ -42,6 +52,10 @@ var play = {
 		this.player.scale.setTo(.5, .5)
 		this.player.anchor.setTo(.5, .5)
 		this.player.body.setSize(this.player.width - 10, this.player.height)
+
+		//  And some controls to play the game with
+		this.cursors = game.input.keyboard.createCursorKeys();
+		this.fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR); 
 
 		// Score label
 		this.bmpText = game.add.bitmapText(game.width / 2, 100, 'fontUsed', '', 150);
@@ -95,6 +109,12 @@ var play = {
 
 		frame_counter++
 		game.global.score += this.scorePoint();
+
+		//Fire bullets
+  		if (this.fireButton.isDown) {
+        	this.fireBullet();
+   		}
+
 	},
 
 	//spawn birds
@@ -194,7 +214,6 @@ var play = {
 	},
 
 	killPlayer: function (player) {
-
 		//issues with this
 		//game.plugins.screenShake.shake(20);
 		this.sound.kill.play('', 0, 0.5, false)
@@ -203,6 +222,20 @@ var play = {
 
 	},
 
+	fireBullet: function() {
+		var BULLET_SPEED = -300;
+		//  Grab the first bullet we can from the pool
+		var bullet = this.bullets.getFirstExists(false);
+		if (bullet)
+		{
+		//  Make bullet come out of tip of ship with correct angle
+        var bulletOffset = 20 * Math.sin(game.math.degToRad(this.player.angle));
+        bullet.reset(this.player.x + bulletOffset, this.player.y);
+    	bullet.angle = this.player.angle;
+        game.physics.arcade.velocityFromAngle(bullet.angle - 90, BULLET_SPEED, bullet.body.velocity);
+		bullet.body.velocity.x += this.player.body.velocity.x;  
+		}
+	},
 
 	// Tap on touchscreen or click with mouse
 	onDown: function (pointer) {},
