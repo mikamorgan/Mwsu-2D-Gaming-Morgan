@@ -25,6 +25,9 @@ var play = {
 		// Death sound
 		this.sound.kill = game.add.audio('kill')
 
+		// Explode sound
+		this.sound.explode = game.add.audio('explode')
+
 		// Music
 		this.music = game.add.audio('music')
 		this.music.play('', 0, 0.5, true)
@@ -38,14 +41,14 @@ var play = {
 		this.bullets = game.add.group();
 		this.bullets.enableBody = true;
 		this.bullets.physicsBodyType = Phaser.Physics.ARCADE;
- 		this.bullets.createMultiple(10, 'bullet');
+ 		this.bullets.createMultiple(5, 'bullet');
 		//this.bullets.setAll('anchor.x', 0.5);
 		//this.bullets.setAll('anchor.y', 1);
 		this.bullets.setAll('outOfBoundsKill', true);
  		this.bullets.setAll('checkWorldBounds', true);
 
 		// Player
-		this.player = game.add.sprite(game.width / 2, 250, 'player')
+		this.player = game.add.sprite(game.width / 2, 175, 'player')
 		game.physics.enable(this.player, Phaser.Physics.ARCADE)
 		this.player.enableBody = true
 		this.player.body.collideWorldBounds = true
@@ -73,6 +76,7 @@ var play = {
 
 		// Collision
 		game.physics.arcade.overlap(this.player, this.obstacles, this.killPlayer, null, this)
+		game.physics.arcade.overlap(this.bullets, this.obstacles, this.explodeObstacle, null, this)
 
 		// Spawn enemies
 		if (frame_counter % 90 == 0) {
@@ -108,7 +112,6 @@ var play = {
 		this.move();
 
 		frame_counter++
-		game.global.score += this.scorePoint();
 
 		//Fire bullets
   		if (this.fireButton.isDown) {
@@ -189,33 +192,14 @@ var play = {
 		console.log(this.obstacles.children.length);
 	},
 
-	scorePoint: function () {
-		//console.log(this.obstacles)
-		var point = 0;
-		var obstacles = this.obstacles.children;
-
-		for (var i = 0; i < obstacles.length; i++) {
-			if (obstacles[i].visible) {
-				// console.log("vis: ")
-				// console.log(obstacles[i].y,this.player.y);
-				let py = this.player.y;
-				let oy = obstacles[i].y;
-				let ox = obstacles[i].x;
-
-				//if player is below obstacle score point; set off flag to prevent repeats
-				if (obstacles[i].has_given_point && oy < py) { 
-					obstacles[i].has_given_point = false;
-					point++;
-					this.sound.score.play('', 0, 0.5, false)
-				}
-			}
-		}
-		return point;
+	explodeObstacle: function (bullet, obstacle) {
+		this.sound.explode.play('', 0, 0.5, false)
+		bullet.kill();
+		obstacle.kill();
+		game.global.score += 1;
 	},
 
 	killPlayer: function (player) {
-		//issues with this
-		//game.plugins.screenShake.shake(20);
 		this.sound.kill.play('', 0, 0.5, false)
 		player.kill();
 		game.state.start('gameOver');
@@ -223,7 +207,7 @@ var play = {
 	},
 
 	fireBullet: function() {
-		var BULLET_SPEED = -300;
+		var BULLET_SPEED = -400;
 		//  Grab the first bullet we can from the pool
 		var bullet = this.bullets.getFirstExists(false);
 		if (bullet)
