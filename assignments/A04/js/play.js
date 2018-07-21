@@ -80,7 +80,6 @@ var play = {
 
 		// Spawn enemies
 		if (frame_counter % 90 == 0) {
-			//var gap = 120
 			if(Math.random() < 0.33)
 			this.spawnObstacle(game.global.obstacle_id++, Math.random() * game.width , game.height, speed = (200 + (game.global.score * 5)), has_given_point = true)
 			else if(Math.random() < 0.5)
@@ -90,7 +89,6 @@ var play = {
 		}
 
 		if (game.global.score > 10 && frame_counter % 80 == 0) {
-			//var gap = 120
 			if(Math.random() < 0.33)
 			this.spawnObstacle(game.global.obstacle_id++, Math.random() * game.width , game.height, speed = (200 + (game.global.score * 7)), has_given_point = true)
 			else if(Math.random() < 0.5)
@@ -99,8 +97,7 @@ var play = {
 			this.spawnObstacle3(game.global.obstacle3_id++, Math.random() * game.width , game.height, speed = (200 + (game.global.score * 7)), has_given_point = true)
 		}
 
-		if (game.global.score > 30 && frame_counter % 70 == 0) {
-			//var gap = 120
+		if (game.global.score > 20 && frame_counter % 70 == 0) {
 			if(Math.random() < 0.33)
 			this.spawnObstacle(game.global.obstacle_id++, Math.random() * game.width , game.height, speed = (200 + (game.global.score * 10)), has_given_point = true)
 			else if(Math.random() < 0.5)
@@ -196,7 +193,14 @@ var play = {
 		this.sound.explode.play('', 0, 0.5, false)
 		bullet.kill();
 		obstacle.kill();
-		game.global.score += 1;
+
+		//add increased points based on difficulty
+		if(game.global.score < 10)
+			game.global.score += 1;
+		else if(game.golbal.score < 20)
+			game.global.score += 2;
+		else
+			game.global.score += 3;
 	},
 
 	killPlayer: function (player) {
