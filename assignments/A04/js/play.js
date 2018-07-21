@@ -197,7 +197,7 @@ var play = {
 		//add increased points based on difficulty
 		if(game.global.score < 10)
 			game.global.score += 1;
-		else if(game.golbal.score < 20)
+		else if(game.global.score < 20)
 			game.global.score += 2;
 		else
 			game.global.score += 3;
