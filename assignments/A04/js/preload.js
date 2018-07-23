@@ -18,7 +18,7 @@ var preload = {
 		this.load.image('obstacle3', 'images/rocket.png')
 		this.load.image('pause', 'images/pause.png')
 		this.load.image('bg', 'images/cream.png')
-		this.load.image('bg', 'images/explosion.png')
+		this.load.spritesheet('bang', 'images/explosion.png', 100, 100, 73);
 
 		// audio
 		this.load.audio('bg_spin', 'sounds/spin_bg_music.mp3')

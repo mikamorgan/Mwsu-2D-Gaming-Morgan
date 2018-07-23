@@ -194,6 +194,15 @@ var play = {
 		bullet.kill();
 		obstacle.kill();
 
+		//creates explosion animation
+		var explosion = this.game.add.sprite (obstacle.body.x, obstacle.body.y, "bang")
+		explosion.anchor.setTo(0.5,0.5);
+		explosion.animations.add("bang", null, 60, false, true);
+		explosion.animations.play("bang");
+		
+		//remove explosion spirte (not working)
+		//this.explosion.remove(explosion);
+
 		//add increased points based on difficulty
 		if(game.global.score < 10)
 			game.global.score += 1;
