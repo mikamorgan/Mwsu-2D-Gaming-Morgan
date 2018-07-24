@@ -58,55 +58,127 @@ var level_01 = {
 		// Use the shift key to add running by changing speed and animation
 
 		// Create a move class or function to clean up code.
-		if (this.leftKey.isDown) {
-			// if (this.shiftKey.isDown) {
-			// 	this.player.body.velocity.x = -400;
-			// this.player.animations.play('run_left');
-			// this.prevDir = 'left'
-			// }
-			// else {
+			if (this.leftKey.isDown && !this.upKey.isDown) {
 			this.player.body.velocity.x = -200;
+			this.player.body.velocity.y = 0;
 			this.player.animations.play('walk_left');
 			this.prevDir = 'left'
 		}
-		if (this.rightKey.isDown) {
-			// if (this.shiftKey.isDown) {
-			// 	this.player.body.velocity.x = 400;
-			// this.player.animations.play('run_right');
-			// this.prevDir = 'right'
-			// }
-			//else {
+		if (this.leftKey.isDown && this.upKey.isDown) {
+			this.player.body.velocity.x = -200;
+			this.player.body.velocity.y = 200;
+			this.player.animations.play('walk_left');
+			this.prevDir = 'left'
+		}
+		if (this.leftKey.isDown && this.downKey.isDown) {
+			this.player.body.velocity.x = -200;
+			this.player.body.velocity.y = -200;
+			this.player.animations.play('walk_left');
+			this.prevDir = 'left'
+		}
+		if (this.leftKey.isDown && !this.downKey.isDown) {
+			this.player.body.velocity.x = -200;
+			this.player.body.velocity.y = 0;
+			this.player.animations.play('walk_left');
+			this.prevDir = 'left'
+		}
+		if (this.rightKey.isDown && !this.upKey.isDown) {
 			this.player.body.velocity.x = 200;
+			this.player.body.velocity.y = 0;
 			this.player.animations.play('walk_right');
 			this.prevDir = 'right'
 		}
-		if (this.upKey.isDown) {
+		if (this.rightKey.isDown && this.upKey.isDown) {
+			this.player.body.velocity.x = 200;
+			this.player.body.velocity.y = 200;
+			this.player.animations.play('walk_right');
+			this.prevDir = 'right'
+		}
+		if (this.rightKey.isDown && !this.downKey.isDown) {
+			this.player.body.velocity.x = 200;
+			this.player.body.velocity.y = 0;
+			this.player.animations.play('walk_right');
+			this.prevDir = 'right'
+		}
+		if (this.rightKey.isDown && this.downKey.isDown) {
+			this.player.body.velocity.x = 200;
+			this.player.body.velocity.y = -200;
+			this.player.animations.play('walk_right');
+			this.prevDir = 'right'
+		}
+		if (this.upKey.isDown && !this.rightKey.isDown) {
 			if(this.prevDir == 'left'){
 				this.player.animations.play('walk_left');
 			}else{
 				this.player.animations.play('walk_right');
 			}
 			this.player.body.velocity.y = -200;
+			this.player.body.velocity.x = 0;
 		}
-		if (this.shiftKey.isDown) {
+		if (this.upKey.isDown && this.rightKey.isDown) {
 			if(this.prevDir == 'left'){
-				this.player.animations.play('run_left');
-				this.player.body.velocity.x = -400;
-			}
-			else{
+				this.player.animations.play('walk_left');
+			}else{
 				this.player.animations.play('walk_right');
-				this.player.body.velocity.x = 400;
 			}
-			
+			this.player.body.velocity.y = -200;
+			this.player.body.velocity.x = -200;
 		}
-		if (this.downKey.isDown) {
+		if (this.upKey.isDown && !this.leftKey.isDown) {
+			if(this.prevDir == 'left'){
+				this.player.animations.play('walk_left');
+			}else{
+				this.player.animations.play('walk_right');
+			}
+			this.player.body.velocity.y = -200;
+			this.player.body.velocity.x = 0;
+		}
+		if (this.upKey.isDown && this.leftKey.isDown) {
+			if(this.prevDir == 'left'){
+				this.player.animations.play('walk_left');
+			}else{
+				this.player.animations.play('walk_right');
+			}
+			this.player.body.velocity.y = -200;
+			this.player.body.velocity.x = 200;
+		}
+		if (this.downKey.isDown && !this.rightKey.isDown) {
 			if(this.prevDir == 'left'){
 				this.player.animations.play('walk_left');
 			}else{
 				this.player.animations.play('walk_right');
 			}
 			this.player.body.velocity.y = 200;
+			this.player.body.velocity.x = 0;
 		}
+		if (this.downKey.isDown && this.rightKey.isDown) {
+			if(this.prevDir == 'left'){
+				this.player.animations.play('walk_left');
+			}else{
+				this.player.animations.play('walk_right');
+			}
+			this.player.body.velocity.y = 200;
+			this.player.body.velocity.x = 200;
+		}
+		if (this.downKey.isDown && !this.leftKey.isDown) {
+			if(this.prevDir == 'left'){
+				this.player.animations.play('walk_left');
+			}else{
+				this.player.animations.play('walk_right');
+			}
+			this.player.body.velocity.y = 200;
+			this.player.body.velocity.x = 0;
+		}
+		if (this.downKey.isDown && this.leftKey.isDown) {
+			if(this.prevDir == 'left'){
+				this.player.animations.play('walk_left');
+			}else{
+				this.player.animations.play('walk_right');
+			}
+			this.player.body.velocity.y = 200;
+			this.player.body.velocity.x = -200;
+		}
+
 		if (!this.leftKey.isDown && !this.rightKey.isDown && !this.upKey.isDown && !this.downKey.isDown) {
 			if(this.prevDir == 'left'){
 				this.player.animations.play('idle_left');
