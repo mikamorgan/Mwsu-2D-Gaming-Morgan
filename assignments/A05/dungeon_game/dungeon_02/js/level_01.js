@@ -75,9 +75,21 @@ var level_01 = {
 			this.player.animations.play('walk_right');
 			this.prevDir = 'right'
 		}
+		if (this.rightKey.isDown && this.upKey.isDown) {
+			this.player.body.velocity.x = 200;
+			this.player.body.velocity.y = 200;
+			this.player.animations.play('walk_right');
+			this.prevDir = 'right'
+		}
 		if (this.rightKey.isDown && !this.downKey.isDown) {
 			this.player.body.velocity.x = 200;
 			this.player.body.velocity.y = 0;
+			this.player.animations.play('walk_right');
+			this.prevDir = 'right'
+		}
+		if (this.rightKey.isDown && this.downKey.isDown) {
+			this.player.body.velocity.x = 200;
+			this.player.body.velocity.y = -200;
 			this.player.animations.play('walk_right');
 			this.prevDir = 'right'
 		}
