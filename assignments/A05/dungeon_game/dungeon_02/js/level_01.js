@@ -5,7 +5,7 @@ var level_01 = {
 	},
 	create: function () {
 		console.log("level_01.js");
-
+		
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 
 		this.prevDir = '';	// holds sprites previous direction (left , right) so
@@ -14,7 +14,7 @@ var level_01 = {
 		// Adding the knight atlas that contains all the animations
 		this.player = game.add.sprite(game.camera.width / 2, game.camera.height / 2, 'knight_atlas');
 
-			// Add walking and idle animations. Different aninmations are needed based on direction of movement.
+		// Add walking and idle animations. Different aninmations are needed based on direction of movement.
 		this.player.animations.add('walk_left', Phaser.Animation.generateFrameNames('Walk_left', 0, 8), 20, true);
 		this.player.animations.add('walk_right', Phaser.Animation.generateFrameNames('Walk_right', 0, 8), 20, true);
 		this.player.animations.add('idle_left', Phaser.Animation.generateFrameNames('Idle_left', 0, 9), 20, true);
@@ -36,15 +36,15 @@ var level_01 = {
 		// set the anchor for sprite to middle of the view
 		this.player.anchor.setTo(0.5);
 
-		this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-		this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
-		this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-		this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-		this.spaceBar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		this.shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFTKEY);
-		this.altKey = game.input.keyboard.addKey(Phaser.Keyboard.ALT);
-		this.key1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-		//this.keyA = game.input.keyboard.addkey(Phaser.Keyboard.A);
+		// this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
+		// this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
+		// this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
+		// this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
+		// //this.spaceBar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		// this.shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFTKEY);
+		// this.altKey = game.input.keyboard.addKey(Phaser.Keyboard.ALT);
+		// this.key1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
+		// //this.keyA = game.input.keyboard.addkey(Phaser.KeyCode.A);
 		k = game.input.keyboard;
 		game.addPauseButton(game);
 	},
@@ -58,128 +58,53 @@ var level_01 = {
 		// Use the shift key to add running by changing speed and animation
 
 		// Create a move class or function to clean up code.
-			if (this.leftKey.isDown && !this.upKey.isDown) {
+		if (k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.SHIFT)) {
+			// if (this.shiftKey.isDown) {
+			// 	this.player.body.velocity.x = -400;
+			// this.player.animations.play('run_left');
+			// this.prevDir = 'left'
+			// }
+			// else {
 			this.player.body.velocity.x = -200;
-			this.player.body.velocity.y = 0;
 			this.player.animations.play('walk_left');
 			this.prevDir = 'left'
 		}
-		if (this.leftKey.isDown && this.upKey.isDown) {
-			this.player.body.velocity.x = -200;
-			this.player.body.velocity.y = 200;
-			this.player.animations.play('walk_left');
-			this.prevDir = 'left'
-		}
-		if (this.leftKey.isDown && this.downKey.isDown) {
-			this.player.body.velocity.x = -200;
-			this.player.body.velocity.y = -200;
-			this.player.animations.play('walk_left');
-			this.prevDir = 'left'
-		}
-		if (this.leftKey.isDown && !this.downKey.isDown) {
-			this.player.body.velocity.x = -200;
-			this.player.body.velocity.y = 0;
-			this.player.animations.play('walk_left');
-			this.prevDir = 'left'
-		}
-		if (this.rightKey.isDown && !this.upKey.isDown) {
+		if (k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.SHIFT)) {
+			// if (this.shiftKey.isDown) {
+			// 	this.player.body.velocity.x = 400;
+			// this.player.animations.play('run_right');
+			// this.prevDir = 'right'
+			// }
+			//else {
 			this.player.body.velocity.x = 200;
-			this.player.body.velocity.y = 0;
 			this.player.animations.play('walk_right');
 			this.prevDir = 'right'
 		}
-		if (this.rightKey.isDown && this.upKey.isDown) {
-			this.player.body.velocity.x = 200;
-			this.player.body.velocity.y = 200;
-			this.player.animations.play('walk_right');
-			this.prevDir = 'right'
+		if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.LEFT)) {
+			this.player.animations.play('run_left');
+			this.player.body.velocity.x = -400;
 		}
-		if (this.rightKey.isDown && !this.downKey.isDown) {
-			this.player.body.velocity.x = 200;
-			this.player.body.velocity.y = 0;
-			this.player.animations.play('walk_right');
-			this.prevDir = 'right'
+		if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.RIGHT)) {
+			this.player.animations.play('run_right');
+			this.player.body.velocity.x = 400;
 		}
-		if (this.rightKey.isDown && this.downKey.isDown) {
-			this.player.body.velocity.x = 200;
-			this.player.body.velocity.y = -200;
-			this.player.animations.play('walk_right');
-			this.prevDir = 'right'
-		}
-		if (this.upKey.isDown && !this.rightKey.isDown) {
+		if (k.isDown(Phaser.Keyboard.UP)) {
 			if(this.prevDir == 'left'){
 				this.player.animations.play('walk_left');
 			}else{
 				this.player.animations.play('walk_right');
 			}
 			this.player.body.velocity.y = -200;
-			this.player.body.velocity.x = 0;
 		}
-		if (this.upKey.isDown && this.rightKey.isDown) {
-			if(this.prevDir == 'left'){
-				this.player.animations.play('walk_left');
-			}else{
-				this.player.animations.play('walk_right');
-			}
-			this.player.body.velocity.y = -200;
-			this.player.body.velocity.x = -200;
-		}
-		if (this.upKey.isDown && !this.leftKey.isDown) {
-			if(this.prevDir == 'left'){
-				this.player.animations.play('walk_left');
-			}else{
-				this.player.animations.play('walk_right');
-			}
-			this.player.body.velocity.y = -200;
-			this.player.body.velocity.x = 0;
-		}
-		if (this.upKey.isDown && this.leftKey.isDown) {
-			if(this.prevDir == 'left'){
-				this.player.animations.play('walk_left');
-			}else{
-				this.player.animations.play('walk_right');
-			}
-			this.player.body.velocity.y = -200;
-			this.player.body.velocity.x = 200;
-		}
-		if (this.downKey.isDown && !this.rightKey.isDown) {
+		if (k.isDown(Phaser.Keyboard.DOWN)) {
 			if(this.prevDir == 'left'){
 				this.player.animations.play('walk_left');
 			}else{
 				this.player.animations.play('walk_right');
 			}
 			this.player.body.velocity.y = 200;
-			this.player.body.velocity.x = 0;
 		}
-		if (this.downKey.isDown && this.rightKey.isDown) {
-			if(this.prevDir == 'left'){
-				this.player.animations.play('walk_left');
-			}else{
-				this.player.animations.play('walk_right');
-			}
-			this.player.body.velocity.y = 200;
-			this.player.body.velocity.x = 200;
-		}
-		if (this.downKey.isDown && !this.leftKey.isDown) {
-			if(this.prevDir == 'left'){
-				this.player.animations.play('walk_left');
-			}else{
-				this.player.animations.play('walk_right');
-			}
-			this.player.body.velocity.y = 200;
-			this.player.body.velocity.x = 0;
-		}
-		if (this.downKey.isDown && this.leftKey.isDown) {
-			if(this.prevDir == 'left'){
-				this.player.animations.play('walk_left');
-			}else{
-				this.player.animations.play('walk_right');
-			}
-			this.player.body.velocity.y = 200;
-			this.player.body.velocity.x = -200;
-		}
-
-		if (!this.leftKey.isDown && !this.rightKey.isDown && !this.upKey.isDown && !this.downKey.isDown) {
+		if (!k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.UP) && !k.isDown(Phaser.Keyboard.DOWN)) {
 			if(this.prevDir == 'left'){
 				this.player.animations.play('idle_left');
 			}else{
@@ -188,7 +113,7 @@ var level_01 = {
 			this.player.body.velocity.x = 0;
 			this.player.body.velocity.y = 0;
 		}
-		if (this.spaceBar.isDown) {
+		if (k.isDown(Phaser.Keyboard.SPACEBAR)) {
 			if(this.prevDir == 'left'){
 				this.player.animations.play('jump_left');
 			}
@@ -205,8 +130,6 @@ var level_01 = {
 				this.player.animations.play('attack_right')
 			}
 		}
-	},
-
 	},
 
 	render: function(){
