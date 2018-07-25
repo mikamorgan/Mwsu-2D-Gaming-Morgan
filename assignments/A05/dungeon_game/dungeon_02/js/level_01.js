@@ -40,11 +40,11 @@ var level_01 = {
 		// this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
 		// this.leftKey = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
 		// this.rightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-		// //this.spaceBar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		// this.shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFTKEY);
+		// this.spaceBar = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		// this.shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
 		// this.altKey = game.input.keyboard.addKey(Phaser.Keyboard.ALT);
 		// this.key1 = game.input.keyboard.addKey(Phaser.Keyboard.ONE);
-		// //this.keyA = game.input.keyboard.addkey(Phaser.KeyCode.A);
+		//this.keyA = game.input.keyboard.addkey(Phaser.KeyCode.A);
 		k = game.input.keyboard;
 		game.addPauseButton(game);
 	},
@@ -55,35 +55,54 @@ var level_01 = {
 		// and plays the proper animation. It sets the prevDir so we can
 		// face the correct way when stopped.
 
-		// Use the shift key to add running by changing speed and animation
-
-		// Create a move class or function to clean up code.
+		// Walk E, NE, SE
 		if (k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.SHIFT)) {
-			// if (this.shiftKey.isDown) {
-			// 	this.player.body.velocity.x = -400;
-			// this.player.animations.play('run_left');
-			// this.prevDir = 'left'
-			// }
-			// else {
-			this.player.body.velocity.x = -200;
+			if(k.isDown(Phaser.Keyboard.UP)){
+				this.player.body.velocity.x = -200;
+				this.player.body.velocity.y = -200;
+			}
+			else if(k.isDown(Phaser.Keyboard.DOWN)){
+				this.player.body.velocity.x = -200;
+				this.player.body.velocity.y = 200;
+			}
+			else{
+				this.player.body.velocity.x = -200;
+				this.player.body.velocity.y = 0;
+			}
 			this.player.animations.play('walk_left');
 			this.prevDir = 'left'
 		}
+
+		// Walk W, NW, SW
 		if (k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.SHIFT)) {
-			// if (this.shiftKey.isDown) {
-			// 	this.player.body.velocity.x = 400;
-			// this.player.animations.play('run_right');
-			// this.prevDir = 'right'
-			// }
-			//else {
-			this.player.body.velocity.x = 200;
-			this.player.animations.play('walk_right');
-			this.prevDir = 'right'
+			if(k.isDown(Phaser.Keyboard.UP)){
+					this.player.body.velocity.x = 200;
+					this.player.body.velocity.y = -200;
+				}
+			else if(k.isDown(Phaser.Keyboard.DOWN)){
+					this.player.body.velocity.x = 200;
+					this.player.body.velocity.y = 200;
+				}
+			else{
+					this.player.body.velocity.x = 200;
+					this.player.body.velocity.y = 0;
+				}
+				this.player.animations.play('walk_right');
+				this.prevDir = 'right'
 		}
+
+		// Walk right
+		// if (k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.SHIFT)) {
+		// 	this.player.body.velocity.x = 200;
+		// 	this.player.animations.play('walk_right');
+		// 	this.prevDir = 'right'
+		// }
+		// Run left
 		if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.LEFT)) {
 			this.player.animations.play('run_left');
 			this.player.body.velocity.x = -400;
 		}
+		// Run right
 		if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.RIGHT)) {
 			this.player.animations.play('run_right');
 			this.player.body.velocity.x = 400;
@@ -113,14 +132,16 @@ var level_01 = {
 			this.player.body.velocity.x = 0;
 			this.player.body.velocity.y = 0;
 		}
+		//jump animation, does not work
 		if (k.isDown(Phaser.Keyboard.SPACEBAR)) {
-			if(this.prevDir == 'left'){
-				this.player.animations.play('jump_left');
-			}
-			else{
-				this.player.animations.play('jump_right');
-			}
-			console.log(this.player.scale.x )
+			//if(this.prevDir == 'left'){
+			//	this.player.animations.play('jump_left');
+			//}
+			//else{
+			//	this.player.animations.play('jump_right');
+			//}
+			//console.log(this.player.scale.x )
+			this.player.animations.play('jump_right');
 		}      
 		if (k.isDown(65)){
 			if (this.prevDir == 'left'){
@@ -130,6 +151,135 @@ var level_01 = {
 				this.player.animations.play('attack_right')
 			}
 		}
+
+	   if(k.isDown(Phaser.Keyboard.ENTER)){
+		   //this.player.body.velocity.x = -200;
+		   this.player.animations.play('dead');
+	   }
+
+	// if (k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.UP)) {
+	// 	this.player.body.velocity.x = 200;
+	// 	this.player.body.velocity.y = 0;
+	// 	this.player.animations.play('walk_right');
+	// 	this.prevDir = 'right'
+	// }
+	// if (k.isDown(Phaser.Keyboard.RIGHT) && k.isDown(Phaser.Keyboard.UP)) {
+	// 	this.player.body.velocity.x = 200;
+	// 	this.player.body.velocity.y = -200;
+	// 	this.player.animations.play('walk_right');
+	// 	this.prevDir = 'right'
+	// }
+	// if (k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.DOWN)) {
+	// 	this.player.body.velocity.x = 200;
+	// 	this.player.body.velocity.y = 0;
+	// 	this.player.animations.play('walk_right');
+	// 	this.prevDir = 'right'
+	// }
+	// if (k.isDown(Phaser.Keyboard.RIGHT) && k.isDown(Phaser.Keyboard.DOWN)) {
+	// 	this.player.body.velocity.x = 200;
+	// 	this.player.body.velocity.y = 200;
+	// 	this.player.animations.play('walk_right');
+	// 	this.prevDir = 'right'
+	// }
+	// if (k.isDown(Phaser.Keyboard.UP) && !k.isDown(Phaser.Keyboard.RIGHT)) {
+	// 	if(this.prevDir == 'left'){
+	// 		this.player.animations.play('walk_left');
+	// 	}else{
+	// 		this.player.animations.play('walk_right');
+	// 	}
+	// 	this.player.body.velocity.y = -200;
+	// 	this.player.body.velocity.x = 0;
+	// }
+	// if (k.isDown(Phaser.Keyboard.UP) && k.isDown(Phaser.Keyboard.RIGHT)) {
+	// 	if(this.prevDir == 'left'){
+	// 		this.player.animations.play('walk_left');
+	// 	}else{
+	// 		this.player.animations.play('walk_right');
+	// 	}
+	// 	this.player.body.velocity.y = -200;
+	// 	this.player.body.velocity.x = -200;
+	// }
+	// if (k.isDown(Phaser.Keyboard.UP) && !k.isDown(Phaser.Keyboard.LEFT)) {
+	// 	if(this.prevDir == 'left'){
+	// 		this.player.animations.play('walk_left');
+	// 	}else{
+	// 		this.player.animations.play('walk_right');
+	// 	}
+	// 	this.player.body.velocity.y = -200;
+	// 	this.player.body.velocity.x = 0;
+	// }
+	// if (k.isDown(Phaser.Keyboard.UP) && k.isDown(Phaser.Keyboard.LEFT)) {
+	// 	if(this.prevDir == 'left'){
+	// 		this.player.animations.play('walk_left');
+	// 	}else{
+	// 		this.player.animations.play('walk_right');
+	// 	}
+	// 	this.player.body.velocity.y = -200;
+	// 	this.player.body.velocity.x = 200;
+	// }
+	// if (k.isDown(Phaser.Keyboard.DOWN) && !k.isDown(Phaser.Keyboard.RIGHT)) {
+	// 	if(this.prevDir == 'left'){
+	// 		this.player.animations.play('walk_left');
+	// 	}else{
+	// 		this.player.animations.play('walk_right');
+	// 	}
+	// 	this.player.body.velocity.y = 200;
+	// 	this.player.body.velocity.x = 0;
+	// }
+	// if (k.isDown(Phaser.Keyboard.DOWN) && k.isDown(Phaser.Keyboard.RIGHT)) {
+	// 	if(this.prevDir == 'left'){
+	// 		this.player.animations.play('walk_left');
+	// 	}else{
+	// 		this.player.animations.play('walk_right');
+	// 	}
+	// 	this.player.body.velocity.y = 200;
+	// 	this.player.body.velocity.x = 200;
+	// }
+	// if (k.isDown(Phaser.Keyboard.DOWN) && !k.isDown(Phaser.Keyboard.LEFT)) {
+	// 	if(this.prevDir == 'left'){
+	// 		this.player.animations.play('walk_left');
+	// 	}else{
+	// 		this.player.animations.play('walk_right');
+	// 	}
+	// 	this.player.body.velocity.y = 200;
+	// 	this.player.body.velocity.x = 0;
+	// }
+	// if (k.isDown(Phaser.Keyboard.DOWN) && k.isDown(Phaser.Keyboard.LEFT)) {
+	// 	if(this.prevDir == 'left'){
+	// 		this.player.animations.play('walk_left');
+	// 	}else{
+	// 		this.player.animations.play('walk_right');
+	// 	}
+	// 	this.player.body.velocity.y = 200;
+	// 	this.player.body.velocity.x = -200;
+	// }
+
+	if (!k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.UP) && !k.isDown(Phaser.Keyboard.DOWN)) {
+		if(this.prevDir == 'left'){
+			this.player.animations.play('idle_left');
+		}else{
+			this.player.animations.play('idle_right');
+		}
+		this.player.body.velocity.x = 0;
+		this.player.body.velocity.y = 0;
+	}
+	if (k.isDown(Phaser.Keyboard.SPACEBAR)) {
+		if(this.prevDir == 'left'){
+			this.player.animations.play('jump_left');
+		}
+		else{
+			this.player.animations.play('jump_right');
+		}
+		console.log(this.player.scale.x )
+	}      
+	if (k.isDown(65)){
+		if (this.prevDir == 'left'){
+			this.player.animations.play('attack_left')
+		}
+		else{
+			this.player.animations.play('attack_right')
+		}
+	}
 	},
 
 	render: function(){
