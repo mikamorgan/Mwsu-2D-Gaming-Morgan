@@ -5,7 +5,7 @@ var level_01 = {
 	},
 	create: function () {
 		console.log("level_01.js");
-		
+		this.animation_playing = false;
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 
 		this.prevDir = '';	// holds sprites previous direction (left , right) so
@@ -23,7 +23,7 @@ var level_01 = {
 		this.player.animations.add('run_left', Phaser.Animation.generateFrameNames('Run_left', 0, 9), 20, true);
 		this.player.animations.add('dead', Phaser.Animation.generateFrameNames('Dead', 1, 10), 20, true);
 		this.player.animations.add('jump_left', Phaser.Animation.generateFrameNames('Jump_left', 0, 9), 20, true);
-		this.player.animations.add('jump_right', Phaser.Animation.generateFrameNames('Jump_right', 0, 9), 20, true);
+		jr = this.player.animations.add('jump_right', Phaser.Animation.generateFrameNames('Jump_right', 0, 9), 20, true);
 		this.player.animations.add('attack_left', Phaser.Animation.generateFrameNames('Attack_left', 0, 9), 20, false);
 		this.player.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
 		this.player.animations.add('jumpattack_left', Phaser.Animation.generateFrameNames('JumpAttack_left', 0, 9), 20, true);
@@ -55,8 +55,25 @@ var level_01 = {
 		// and plays the proper animation. It sets the prevDir so we can
 		// face the correct way when stopped.
 
+		if (!this.animation_playing && k.isDown(Phaser.Keyboard.SPACEBAR)) {
+			console.log("one");
+			//if(this.prevDir == 'left'){
+			//	this.player.animations.play('jump_left');
+			//}
+			//else{
+			//	this.player.animations.play('jump_right');
+			//}
+			//console.log(this.player.scale.x )
+			this.animation_playing = true;
+			this.player.animations.play('dead');
+			jr.onComplete.add(function() {
+				this.animation_playing = false;
+			},this);
+		}  
+
 		// Walk E, NE, SE
 		if (k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.SHIFT)) {
+			console.log("two");
 			if(k.isDown(Phaser.Keyboard.UP)){
 				this.player.body.velocity.x = -200;
 				this.player.body.velocity.y = -200;
@@ -75,6 +92,7 @@ var level_01 = {
 
 		// Walk W, NW, SW
 		if (k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.SHIFT)) {
+			console.log("three");
 			if(k.isDown(Phaser.Keyboard.UP)){
 					this.player.body.velocity.x = 200;
 					this.player.body.velocity.y = -200;
@@ -99,15 +117,18 @@ var level_01 = {
 		// }
 		// Run left
 		if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.LEFT)) {
+			console.log("four");
 			this.player.animations.play('run_left');
 			this.player.body.velocity.x = -400;
 		}
 		// Run right
 		if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.RIGHT)) {
+			console.log("five");
 			this.player.animations.play('run_right');
 			this.player.body.velocity.x = 400;
 		}
 		if (k.isDown(Phaser.Keyboard.UP)) {
+			console.log("six");
 			if(this.prevDir == 'left'){
 				this.player.animations.play('walk_left');
 			}else{
@@ -116,6 +137,7 @@ var level_01 = {
 			this.player.body.velocity.y = -200;
 		}
 		if (k.isDown(Phaser.Keyboard.DOWN)) {
+			console.log("seven");
 			if(this.prevDir == 'left'){
 				this.player.animations.play('walk_left');
 			}else{
@@ -123,7 +145,8 @@ var level_01 = {
 			}
 			this.player.body.velocity.y = 200;
 		}
-		if (!k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.UP) && !k.isDown(Phaser.Keyboard.DOWN)) {
+		if (!k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.UP) && !k.isDown(Phaser.Keyboard.DOWN) && !k.isDown(Phaser.Keyboard.SPACEBAR) && !k.isDown(65) && !k.isDown(Phaser.Keyboard.ENTER)) {
+			console.log("idle");
 			if(this.prevDir == 'left'){
 				this.player.animations.play('idle_left');
 			}else{
@@ -133,17 +156,9 @@ var level_01 = {
 			this.player.body.velocity.y = 0;
 		}
 		//jump animation, does not work
-		if (k.isDown(Phaser.Keyboard.SPACEBAR)) {
-			//if(this.prevDir == 'left'){
-			//	this.player.animations.play('jump_left');
-			//}
-			//else{
-			//	this.player.animations.play('jump_right');
-			//}
-			//console.log(this.player.scale.x )
-			this.player.animations.play('jump_right');
-		}      
+    
 		if (k.isDown(65)){
+			console.log("tw65o");
 			if (this.prevDir == 'left'){
 				this.player.animations.play('attack_left')
 			}
@@ -153,116 +168,13 @@ var level_01 = {
 		}
 
 	   if(k.isDown(Phaser.Keyboard.ENTER)){
+		   console.log("ENTER");
 		   //this.player.body.velocity.x = -200;
+
 		   this.player.animations.play('dead');
 	   }
 
-	// if (k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.UP)) {
-	// 	this.player.body.velocity.x = 200;
-	// 	this.player.body.velocity.y = 0;
-	// 	this.player.animations.play('walk_right');
-	// 	this.prevDir = 'right'
-	// }
-	// if (k.isDown(Phaser.Keyboard.RIGHT) && k.isDown(Phaser.Keyboard.UP)) {
-	// 	this.player.body.velocity.x = 200;
-	// 	this.player.body.velocity.y = -200;
-	// 	this.player.animations.play('walk_right');
-	// 	this.prevDir = 'right'
-	// }
-	// if (k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.DOWN)) {
-	// 	this.player.body.velocity.x = 200;
-	// 	this.player.body.velocity.y = 0;
-	// 	this.player.animations.play('walk_right');
-	// 	this.prevDir = 'right'
-	// }
-	// if (k.isDown(Phaser.Keyboard.RIGHT) && k.isDown(Phaser.Keyboard.DOWN)) {
-	// 	this.player.body.velocity.x = 200;
-	// 	this.player.body.velocity.y = 200;
-	// 	this.player.animations.play('walk_right');
-	// 	this.prevDir = 'right'
-	// }
-	// if (k.isDown(Phaser.Keyboard.UP) && !k.isDown(Phaser.Keyboard.RIGHT)) {
-	// 	if(this.prevDir == 'left'){
-	// 		this.player.animations.play('walk_left');
-	// 	}else{
-	// 		this.player.animations.play('walk_right');
-	// 	}
-	// 	this.player.body.velocity.y = -200;
-	// 	this.player.body.velocity.x = 0;
-	// }
-	// if (k.isDown(Phaser.Keyboard.UP) && k.isDown(Phaser.Keyboard.RIGHT)) {
-	// 	if(this.prevDir == 'left'){
-	// 		this.player.animations.play('walk_left');
-	// 	}else{
-	// 		this.player.animations.play('walk_right');
-	// 	}
-	// 	this.player.body.velocity.y = -200;
-	// 	this.player.body.velocity.x = -200;
-	// }
-	// if (k.isDown(Phaser.Keyboard.UP) && !k.isDown(Phaser.Keyboard.LEFT)) {
-	// 	if(this.prevDir == 'left'){
-	// 		this.player.animations.play('walk_left');
-	// 	}else{
-	// 		this.player.animations.play('walk_right');
-	// 	}
-	// 	this.player.body.velocity.y = -200;
-	// 	this.player.body.velocity.x = 0;
-	// }
-	// if (k.isDown(Phaser.Keyboard.UP) && k.isDown(Phaser.Keyboard.LEFT)) {
-	// 	if(this.prevDir == 'left'){
-	// 		this.player.animations.play('walk_left');
-	// 	}else{
-	// 		this.player.animations.play('walk_right');
-	// 	}
-	// 	this.player.body.velocity.y = -200;
-	// 	this.player.body.velocity.x = 200;
-	// }
-	// if (k.isDown(Phaser.Keyboard.DOWN) && !k.isDown(Phaser.Keyboard.RIGHT)) {
-	// 	if(this.prevDir == 'left'){
-	// 		this.player.animations.play('walk_left');
-	// 	}else{
-	// 		this.player.animations.play('walk_right');
-	// 	}
-	// 	this.player.body.velocity.y = 200;
-	// 	this.player.body.velocity.x = 0;
-	// }
-	// if (k.isDown(Phaser.Keyboard.DOWN) && k.isDown(Phaser.Keyboard.RIGHT)) {
-	// 	if(this.prevDir == 'left'){
-	// 		this.player.animations.play('walk_left');
-	// 	}else{
-	// 		this.player.animations.play('walk_right');
-	// 	}
-	// 	this.player.body.velocity.y = 200;
-	// 	this.player.body.velocity.x = 200;
-	// }
-	// if (k.isDown(Phaser.Keyboard.DOWN) && !k.isDown(Phaser.Keyboard.LEFT)) {
-	// 	if(this.prevDir == 'left'){
-	// 		this.player.animations.play('walk_left');
-	// 	}else{
-	// 		this.player.animations.play('walk_right');
-	// 	}
-	// 	this.player.body.velocity.y = 200;
-	// 	this.player.body.velocity.x = 0;
-	// }
-	// if (k.isDown(Phaser.Keyboard.DOWN) && k.isDown(Phaser.Keyboard.LEFT)) {
-	// 	if(this.prevDir == 'left'){
-	// 		this.player.animations.play('walk_left');
-	// 	}else{
-	// 		this.player.animations.play('walk_right');
-	// 	}
-	// 	this.player.body.velocity.y = 200;
-	// 	this.player.body.velocity.x = -200;
-	// }
-
-	if (!k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.UP) && !k.isDown(Phaser.Keyboard.DOWN)) {
-		if(this.prevDir == 'left'){
-			this.player.animations.play('idle_left');
-		}else{
-			this.player.animations.play('idle_right');
-		}
-		this.player.body.velocity.x = 0;
-		this.player.body.velocity.y = 0;
-	}
+	
 	if (k.isDown(Phaser.Keyboard.SPACEBAR)) {
 		if(this.prevDir == 'left'){
 			this.player.animations.play('jump_left');
