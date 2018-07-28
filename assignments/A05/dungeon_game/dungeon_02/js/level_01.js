@@ -100,6 +100,7 @@ var level_01 =
 				this.player.body.velocity.y = 0;
 			}
 			this.player.animations.play('walk_right');
+<<<<<<< HEAD
 			this.prevDir = 'right'
 		}
 
@@ -149,10 +150,88 @@ var level_01 =
 		if (k.isDown(Phaser.Keyboard.UP)) 
 		{
 			if(this.prevDir == 'left'){
+=======
+			this.prevDir = 'right'
+		}
+
+		// Run left
+		if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.LEFT)) 
+		{
+			if(k.isDown(Phaser.Keyboard.UP))
+			{
+				this.player.body.velocity.x = -400;
+				this.player.body.velocity.y = -400;
+			}
+			else if(k.isDown(Phaser.Keyboard.DOWN))
+			{
+				this.player.body.velocity.x = -400;
+				this.player.body.velocity.y = 400;
+			}
+			else{
+				this.player.body.velocity.x = -400;
+				this.player.body.velocity.y = 0;
+			}
+			this.player.animations.play('run_left');
+			this.prevDir = 'left'
+		}
+
+		// Run right
+		if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.RIGHT)) 
+		{
+			if(k.isDown(Phaser.Keyboard.UP))
+			{
+				this.player.body.velocity.x = 400;
+				this.player.body.velocity.y = -400;
+			}
+			else if(k.isDown(Phaser.Keyboard.DOWN))
+			{
+				this.player.body.velocity.x = 400;
+				this.player.body.velocity.y = 400;
+			}
+			else{
+				this.player.body.velocity.x = 400;
+				this.player.body.velocity.y = 0;
+			}
+			this.player.animations.play('run_right');
+			this.prevDir = 'right'
+		}
+
+		// Walk up
+		if (k.isDown(Phaser.Keyboard.UP))
+		{
+			if(k.isDown(Phaser.Keyboard.LEFT))
+			{
+				this.player.body.velocity.x = -200;
 				this.player.animations.play('walk_left');
-			}else{
+
+			}
+			else if(k.isDown(Phaser.Keyboard.RIGHT))
+			{
+				this.player.body.velocity.x = 200;
 				this.player.animations.play('walk_right');
 			}
+			else{
+				this.player.body.velocity.x = 0;
+				if(this.prevDir == 'left'){
+					this.player.animations.play('walk_left');
+				}else{
+					this.player.animations.play('walk_right');
+				}
+			}
+			this.player.body.velocity.y = -200;
+		}
+
+		// Walk down
+		if (k.isDown(Phaser.Keyboard.DOWN))
+		{
+			if(k.isDown(Phaser.Keyboard.LEFT))
+			{
+				this.player.body.velocity.x = -200;
+>>>>>>> 4bcb6c4efbeb440e5ee147f10a2ecb9557f5aa4d
+				this.player.animations.play('walk_left');
+
+			}
+<<<<<<< HEAD
 			this.player.body.velocity.y = -200;
 		}
 
@@ -162,7 +241,20 @@ var level_01 =
 			if(this.prevDir == 'left'){
 				this.player.animations.play('walk_left');
 			}else{
+=======
+			else if(k.isDown(Phaser.Keyboard.RIGHT))
+			{
+				this.player.body.velocity.x = 200;
+>>>>>>> 4bcb6c4efbeb440e5ee147f10a2ecb9557f5aa4d
 				this.player.animations.play('walk_right');
+			}
+			else{
+				this.player.body.velocity.x = 0;
+				if(this.prevDir == 'left'){
+					this.player.animations.play('walk_left');
+				}else{
+					this.player.animations.play('walk_right');
+				}
 			}
 			this.player.body.velocity.y = 200;
 		}
