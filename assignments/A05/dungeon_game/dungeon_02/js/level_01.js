@@ -22,9 +22,9 @@ var level_01 =
 		this.player.animations.add('idle_right', Phaser.Animation.generateFrameNames('Idle_right', 0, 9), 20, true);
 		this.player.animations.add('run_right', Phaser.Animation.generateFrameNames('Run_right', 0, 9), 20, true);
 		this.player.animations.add('run_left', Phaser.Animation.generateFrameNames('Run_left', 0, 9), 20, true);
-		this.player.animations.add('dead', Phaser.Animation.generateFrameNames('Dead', 1, 10), 20, true);
-		this.player.animations.add('jump_left', Phaser.Animation.generateFrameNames('Jump_left', 0, 9), 20, true);
-		this.player.animations.add('jump_right', Phaser.Animation.generateFrameNames('Jump_right', 0, 9), 20, true);
+		this.player.animations.add('dead', Phaser.Animation.generateFrameNames('Dead', 1, 10), 20, false);
+		this.player.animations.add('jump_left', Phaser.Animation.generateFrameNames('Jump_left', 0, 9), 15, true);
+		this.player.animations.add('jump_right', Phaser.Animation.generateFrameNames('Jump_right', 0, 9), 15, true);
 		this.player.animations.add('attack_left', Phaser.Animation.generateFrameNames('Attack_left', 0, 9), 20, false);
 		this.player.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
 		this.player.animations.add('jumpattack_left', Phaser.Animation.generateFrameNames('JumpAttack_left', 0, 9), 20, true);
@@ -39,13 +39,24 @@ var level_01 =
 
 		k = game.input.keyboard;
 		game.addPauseButton(game);
+
+		// flag to stop movement if character dies
+		this.alive = true;
+
+		// // timed event to start game over state
+		// game.time.events.add(Phaser.Timer.SECOND * 4, this.endGame(), this);
 	},
 
 	update: function () 
 	{
+			this.move();
 
-		this.move();
+	},
 
+	endGame: function () {
+
+		game.state.start('gameOver');
+	
 	},
 
 	render: function()
@@ -100,57 +111,6 @@ var level_01 =
 				this.player.body.velocity.y = 0;
 			}
 			this.player.animations.play('walk_right');
-<<<<<<< HEAD
-			this.prevDir = 'right'
-		}
-
-		// Run left
-		if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.LEFT)) 
-		{
-			if(k.isDown(Phaser.Keyboard.UP))
-			{
-				this.player.body.velocity.x = -400;
-				this.player.body.velocity.y = -400;
-			}
-			else if(k.isDown(Phaser.Keyboard.DOWN))
-			{
-				this.player.body.velocity.x = -400;
-				this.player.body.velocity.y = 400;
-			}
-			else{
-				this.player.body.velocity.x = -400;
-				this.player.body.velocity.y = 0;
-			}
-			this.player.animations.play('run_left');
-			this.prevDir = 'left'
-		}
-
-		// Run right
-		if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.RIGHT)) 
-		{
-			if(k.isDown(Phaser.Keyboard.UP))
-			{
-				this.player.body.velocity.x = 400;
-				this.player.body.velocity.y = -400;
-			}
-			else if(k.isDown(Phaser.Keyboard.DOWN))
-			{
-				this.player.body.velocity.x = 400;
-				this.player.body.velocity.y = 400;
-			}
-			else{
-				this.player.body.velocity.x = 400;
-				this.player.body.velocity.y = 0;
-			}
-			this.player.animations.play('run_right');
-			this.prevDir = 'right'
-		}
-
-		//walk up
-		if (k.isDown(Phaser.Keyboard.UP)) 
-		{
-			if(this.prevDir == 'left'){
-=======
 			this.prevDir = 'right'
 		}
 
@@ -227,25 +187,12 @@ var level_01 =
 			if(k.isDown(Phaser.Keyboard.LEFT))
 			{
 				this.player.body.velocity.x = -200;
->>>>>>> 4bcb6c4efbeb440e5ee147f10a2ecb9557f5aa4d
 				this.player.animations.play('walk_left');
 
 			}
-<<<<<<< HEAD
-			this.player.body.velocity.y = -200;
-		}
-
-		// walk down
-		if (k.isDown(Phaser.Keyboard.DOWN)) 
-		{
-			if(this.prevDir == 'left'){
-				this.player.animations.play('walk_left');
-			}else{
-=======
 			else if(k.isDown(Phaser.Keyboard.RIGHT))
 			{
 				this.player.body.velocity.x = 200;
->>>>>>> 4bcb6c4efbeb440e5ee147f10a2ecb9557f5aa4d
 				this.player.animations.play('walk_right');
 			}
 			else{
@@ -262,7 +209,7 @@ var level_01 =
 		// idle
 		if (!k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.UP) 
 		&& !k.isDown(Phaser.Keyboard.DOWN) && !k.isDown(Phaser.Keyboard.SPACEBAR) && !k.isDown(65) 
-		&& !k.isDown(Phaser.Keyboard.ENTER) && !k.isDown(83))
+		&& !k.isDown(Phaser.Keyboard.ENTER) && !k.isDown(83) && this.alive)
 		{
 			if(this.prevDir == 'left'){
 				this.player.animations.play('idle_left');
@@ -309,13 +256,23 @@ var level_01 =
 			{
 				this.player.animations.play('jump_right');
 			}
-			//this.player.body.y -= 0.50;
+			this.player.body.velocity.y = -20;
+			this.player.animations.currentAnim.onLoop.add(this.endJump, this);
 		}
 
 		// dead
 		if(k.isDown(Phaser.Keyboard.ENTER))
 		{
 		this.player.animations.play('dead');
+		this.alive = false;
+
+		// go to game over screen after the death animation plays
+		this.player.animations.currentAnim.onComplete.add(this.endGame, this);
 		}
+	},
+
+	endJump: function (){
+		this.player.body.velocity.y = 550;
+		console.log("endJump");
 	},
 }
