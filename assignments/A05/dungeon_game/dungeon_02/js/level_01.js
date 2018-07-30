@@ -242,7 +242,8 @@ var level_01 =
 			else{
 				this.player.animations.play('jumpattack_right')
 			}
-			//this.player.body.y -= 0.50;
+			this.player.body.velocity.y = -20;
+			this.player.animations.currentAnim.onLoop.add(this.endJump, this);
 		}
 
 		// jump
