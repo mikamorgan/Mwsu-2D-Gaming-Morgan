@@ -110,13 +110,13 @@ var level_03 = {
 		this.player.animations.add('idle_right', Phaser.Animation.generateFrameNames('Idle_right', 0, 9), 20, true);
 		this.player.animations.add('run_right', Phaser.Animation.generateFrameNames('Run_right', 0, 9), 20, true);
 		this.player.animations.add('run_left', Phaser.Animation.generateFrameNames('Run_left', 0, 9), 20, true);
-		this.player.animations.add('dead', Phaser.Animation.generateFrameNames('Dead', 1, 10), 20, true);
-		this.player.animations.add('jump_left', Phaser.Animation.generateFrameNames('Jump_left', 0, 9), 20, true);
-		this.player.animations.add('jump_right', Phaser.Animation.generateFrameNames('Jump_right', 0, 9), 20, true);
+		this.player.animations.add('dead', Phaser.Animation.generateFrameNames('Dead', 1, 10), 20, false);
+		this.player.animations.add('jump_left', Phaser.Animation.generateFrameNames('Jump_left', 0, 9), 15, true);
+		this.player.animations.add('jump_right', Phaser.Animation.generateFrameNames('Jump_right', 0, 9), 15, true);
 		this.player.animations.add('attack_left', Phaser.Animation.generateFrameNames('Attack_left', 0, 9), 20, false);
 		this.player.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
-		this.player.animations.add('jumpattack_left', Phaser.Animation.generateFrameNames('JumpAttack_left', 0, 9), 20, true);
-		this.player.animations.add('jumpattack_right', Phaser.Animation.generateFrameNames('JumpAttack_right', 0, 9), 20, true);
+		this.player.animations.add('jumpattack_left', Phaser.Animation.generateFrameNames('JumpAttack_left', 0, 9), 15, true);
+		this.player.animations.add('jumpattack_right', Phaser.Animation.generateFrameNames('JumpAttack_right', 0, 9), 15, true);
 		this.player.animations.play('idle_left');
 
 		// Add walking and idle animations for the enemy.
@@ -316,7 +316,7 @@ var level_03 = {
 
 		// Display health bar
 		this.myHealthBar.setPosition(this.player.x, this.player.y - 35);
-
+	
 		// Walk left
 		if (k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.SHIFT))
 		{
@@ -454,7 +454,7 @@ var level_03 = {
 		// idle
 		if (!k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.UP) 
 		&& !k.isDown(Phaser.Keyboard.DOWN) && !k.isDown(Phaser.Keyboard.SPACEBAR) && !k.isDown(65) 
-		&& !k.isDown(Phaser.Keyboard.ENTER) && !k.isDown(83))
+		&& !k.isDown(Phaser.Keyboard.ENTER) && !k.isDown(83) && this.alive)
 		{
 			if(this.prevDir == 'left'){
 				this.player.animations.play('idle_left');
@@ -475,10 +475,6 @@ var level_03 = {
 			else{
 				this.player.animations.play('attack_right')
 			}
-			//decrease enemy health if within attack range
-			if(Math.abs(this.player.x - this.enemy.x) < 80){
-				this.enemy.health --;
-			}
 		}
 
 		// jump attack
@@ -491,7 +487,8 @@ var level_03 = {
 			else{
 				this.player.animations.play('jumpattack_right')
 			}
-			//this.player.body.y -= 0.50;
+			this.player.body.velocity.y = -20;
+			this.player.animations.currentAnim.onLoop.add(this.endJump, this);
 		}
 
 		// jump
@@ -505,13 +502,23 @@ var level_03 = {
 			{
 				this.player.animations.play('jump_right');
 			}
-			//this.player.body.y -= 0.50;
+			this.player.body.velocity.y = -20;
+			this.player.animations.currentAnim.onLoop.add(this.endJump, this);
 		}
 
 		// dead
 		if(k.isDown(Phaser.Keyboard.ENTER))
 		{
 		this.player.animations.play('dead');
+		this.alive = false;
+
+		// go to game over screen after the death animation plays
+		this.player.animations.currentAnim.onComplete.add(this.endGame, this);
 		}
 	},
+	
+		endJump: function (){
+			this.player.body.velocity.y = 550;
+			console.log("endJump");
+		},
 }
