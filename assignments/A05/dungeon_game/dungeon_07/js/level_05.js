@@ -302,8 +302,8 @@ var level_05 = {
 	 */
 	checkPlayerTransport: function (player) {
 		if (player.x < 1411) {
-			game.global.current_level = 'level_03';
-			game.state.start(game.global.current_level);
+			game.state.start('gameOverWin');
+			console.log("win game");
 		} else if (player.x > game.width) {
 			// go somewhere
 		} else if (player.y < game.height) {

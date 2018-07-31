@@ -20,6 +20,7 @@ game.state.add("level_03", level_03);
 game.state.add("level_04", level_04);
 game.state.add("level_05", level_05);
 game.state.add("gameOver", gameOver);
+game.state.add("gameOverWin", gameOverWin);
 game.state.start("boot");
 
 /**
