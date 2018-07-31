@@ -94,6 +94,9 @@ var level_01 = {
 		this.enemy = game.add.sprite(450, 1580, 'knight_atlas');
 		this.enemy.health = 100;
 
+		this.enemy2 = game.add.sprite(950, 2670, 'knight_atlas');
+		this.enemy2.health = 100;
+
 		// Add walking and idle animations. Different aninmations are needed based on direction of movement.
 		this.player.animations.add('walk_left', Phaser.Animation.generateFrameNames('Walk_left', 0, 8), 20, true);
 		this.player.animations.add('walk_right', Phaser.Animation.generateFrameNames('Walk_right', 0, 8), 20, true);
@@ -122,6 +125,14 @@ var level_01 = {
 		this.enemy.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
 		this.enemy.animations.play('idle_right');
 
+		// Add walking and idle animations for the second enemy.
+		this.enemy2.animations.add('walk_left', Phaser.Animation.generateFrameNames('Walk_left', 0, 8), 20, true);
+		this.enemy2.animations.add('walk_right', Phaser.Animation.generateFrameNames('Walk_right', 0, 8), 20, true);
+		this.enemy2.animations.add('idle_left', Phaser.Animation.generateFrameNames('Idle_left', 0, 9), 20, true);
+		this.enemy2.animations.add('idle_right', Phaser.Animation.generateFrameNames('Idle_right', 0, 9), 20, true);
+		this.enemy2.animations.add('attack_left', Phaser.Animation.generateFrameNames('Attack_left', 0, 9), 20, true);
+		this.enemy2.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
+		this.enemy2.animations.play('idle_left');
 
 		// turn physics on for player
 		game.physics.arcade.enable(this.player);
@@ -139,8 +150,11 @@ var level_01 = {
 		
 		// turn physics on for enemy
 		game.physics.arcade.enable(this.enemy);
-
 		this.enemy.body.collideWorldBounds = true;
+
+		// turn physics on for second enemy
+		game.physics.arcade.enable(this.enemy2);
+		this.enemy2.body.collideWorldBounds = true;
 
 		// set the anchor for sprite to middle of the view
 		this.player.anchor.setTo(0.5);
@@ -161,14 +175,16 @@ var level_01 = {
 
 		this.frame_counter++;
 
-		//this.checkAttack(this.player, this.enemy)
 		this.moveTowardPlayer(this.enemy, 50, this.flag, this.walkAnim);
+		this.moveTowardPlayer(this.enemy2, 60, this.flag, this.walkAnim);
 		this.checkPlayerTransport(this.player);
 
 		// Necessary to make sure we always check player colliding with objects
 		game.physics.arcade.collide(this.player, this.layers.collision_layer);
 		game.physics.arcade.collide(this.enemy, this.layers.collision_layer);
+		game.physics.arcade.collide(this.enemy2, this.layers.collision_layer);
 		game.physics.arcade.collide(this.player, this.enemy);
+		game.physics.arcade.collide(this.player, this.enemy2);
 
 		if(game.global.health == 0){
 			this.player.animations.play('dead');
@@ -181,6 +197,13 @@ var level_01 = {
 		if(this.enemy.health == 0){
 			this.enemy.kill();
 			this.enemy.destroy();
+			//this.sound.kill.play();
+			this.flag = false;
+		}
+
+		if(this.enemy2.health == 0){
+			this.enemy2.kill();
+			this.enemy2.destroy();
 			//this.sound.kill.play();
 			this.flag = false;
 		}
@@ -205,10 +228,6 @@ var level_01 = {
 			enemy.animations.play('walk_right');
 			//console.log("walk right");
 			}
-		//else{
-		//	enemy.body.velocity.x = 0;
-		//	enemy.body.velocity.y = 0;
-		//}
 		if (this.player.y < enemy.y) {
 			enemy.body.velocity.y = -speed;
 		} else {
@@ -224,14 +243,14 @@ var level_01 = {
 		var xClose = Math.abs(this.player.x - enemy.x);
 		var yClose = Math.abs(this.player.y - enemy.y);
 
-		if(Math.abs(xClose + yClose) < 100){
+		if(Math.abs(xClose + yClose) < 150){
 
 		if(this.player.x < enemy.x){
 			this.walkAnim = false;
 			enemy.body.velocity.x = -50;
 			enemy.animations.play('attack_left');
 			console.log("attack left");
-			if(Math.abs(xClose + yClose) < 20){
+			if(Math.abs(xClose + yClose) < 80){
 				if(this.frame_counter % 50 == 0){
 					game.global.health -= 5;
 					console.log("strike left" + game.global.health);
@@ -457,6 +476,8 @@ var level_01 = {
 			//decrease enemy health if within attack range
 		if(Math.abs(this.player.x - this.enemy.x) < 80){
 			this.enemy.health --;}
+		if(Math.abs(this.player.x - this.enemy2.x) < 80){
+				this.enemy2.health --;}
 		}
 
 		// jump attack
@@ -475,6 +496,8 @@ var level_01 = {
 			//decrease enemy health if within attack range
 			if(Math.abs(this.player.x - this.enemy.x) < 80){
 				this.enemy.health --;}
+			if(Math.abs(this.player.x - this.enemy2.x) < 80){
+				this.enemy2.health --;}
 		}
 
 		// jump

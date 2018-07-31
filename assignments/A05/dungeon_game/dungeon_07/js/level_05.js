@@ -104,6 +104,7 @@ var level_05 = {
 
 		//Add the treasure chest
 		this.chest = game.add.sprite(430, 1500, 'chest');
+		this.chest.scale.setTo(.60, .60);
 
 		//Healthbars
 		this.barConfig = {
@@ -308,7 +309,7 @@ var level_05 = {
 	checkPlayerTransport: function (player) {
 		varx = Math.abs(player.x - this.chest.x);
 		vary = Math.abs(player.y - this.chest.y) - 30;
-		if (varx + vary < 200) 
+		if (varx + vary < 150) 
 			game.state.start('gameOverWin');
 	},
 
