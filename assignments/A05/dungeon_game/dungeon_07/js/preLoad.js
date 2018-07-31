@@ -27,6 +27,7 @@ var preLoad = {
 		game.load.atlas('knight_atlas', 'assets/sprites/knight_atlas.png', 'assets/sprites/knight_atlas.json');
 		game.load.atlas('red_portal', 'assets/sprites/red_portal.png', 'assets/sprites/red_portal.json');
 		game.load.spritesheet('portal_smoke', 'assets/sprites/smoke.png', 128, 128);
+		game.load.spritesheet('chest','assets/images/treasure_chest_anim.png', 131, 141);
 		
 		// load audio here: 
 		//game.load.audio('kill', 'assets/sounds/Ouch.ogg')

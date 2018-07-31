@@ -6,7 +6,6 @@ var level_05 = {
 		game.load.tilemap('level_05', 'assets/maps/cave2.json', null, Phaser.Tilemap.TILED_JSON);
 
 		//map tile images:
-		game.load.image("chest","assets/images/treasure_chest.jpg");
         game.load.image("brown","assets/tileset/ground/brown.png");
         game.load.image("skull_dark","assets/tileset/item/corpse/skull_dark.png");
         game.load.image("grey_stone","assets/tileset/item/statue/grey_stone.png");
@@ -104,7 +103,7 @@ var level_05 = {
 		this.player = game.add.sprite(game.camera.width / 2, game.camera.height / 2, 'knight_atlas');
 
 		//Add the treasure chest
-		this.chest = game.add.sprite(game.camera.width / 2, game.camera.height / 2, 'chest');
+		this.chest = game.add.sprite(430, 1500, 'chest');
 
 		//Healthbars
 		this.barConfig = {
@@ -153,6 +152,9 @@ var level_05 = {
 		this.enemy.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
 		this.enemy.animations.play('idle_right');
 
+		// Chest opening and closing animation
+		this.chest.animations.add('open_close', [0, 1, 2, 3, 2, 1, 0, 0, 0, 0], 5, true);
+
 		// turn physics on for sprites
 		game.physics.arcade.enable(this.player);
 		game.physics.arcade.enable(this.enemy);
@@ -163,7 +165,7 @@ var level_05 = {
 		game.camera.follow(this.player);
 
 		// set starting location for player in some middle spot in the map
-		this.player.x = 2080;
+		this.player.x = 2580;
 		this.player.y = 2080;
 
 		// flag to stop movement if character dies
@@ -179,7 +181,6 @@ var level_05 = {
 		k = game.input.keyboard;
 
 		this.flag = true;
-		this.walkAnim = true;
 
 		this.frame_counter = 0;
 
@@ -193,6 +194,10 @@ var level_05 = {
 		this.getTileProperties(this.layers.collision_layer,this.player);
 
 		this.frame_counter++;
+
+		if(this.frame_counter % 10 == 0){
+			this.chest.animations.play('open_close');
+		}
 
 		//this.checkAttack(this.player, this.enemy)
 		this.moveTowardPlayer(this.enemy, 50, this.flag, this.walkAnim);
@@ -301,16 +306,10 @@ var level_05 = {
 	 * 			 can we make this global somehow?
 	 */
 	checkPlayerTransport: function (player) {
-		if (player.x < 1411) {
+		varx = Math.abs(player.x - this.chest.x);
+		vary = Math.abs(player.y - this.chest.y) - 30;
+		if (varx + vary < 200) 
 			game.state.start('gameOverWin');
-			console.log("win game");
-		} else if (player.x > game.width) {
-			// go somewhere
-		} else if (player.y < game.height) {
-			// go somewhere
-		} else if (player.y > game.height) {
-			// go somewhere
-		}
 	},
 
 	getTileProperties: function (layer, player) {

@@ -40,7 +40,7 @@ var mainMenu = {
     },
     listener: function () {
        
-        game.state.start(game.global.current_level)
+        game.state.start('level_05')
         
     }
 }
