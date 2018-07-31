@@ -72,7 +72,6 @@ var level_01 = {
 
 		// Adding the knight atlas that contains all the animations
 		this.player = game.add.sprite(game.camera.width / 2, game.camera.height / 2, 'knight_atlas');
-		this.player.health = game.global.health;
 
 		//Healthbars
 		this.barConfig = {
@@ -135,6 +134,9 @@ var level_01 = {
 		this.player.x = 1728;
 		this.player.y = 1024;
 
+		// flag to stop movement if character dies
+		this.alive = true;
+		
 		// turn physics on for enemy
 		game.physics.arcade.enable(this.enemy);
 
@@ -168,7 +170,7 @@ var level_01 = {
 		game.physics.arcade.collide(this.enemy, this.layers.collision_layer);
 		game.physics.arcade.collide(this.player, this.enemy);
 
-		if(this.player.health == 0){
+		if(game.global.health == 0){
 			this.walkAnim = false;
 			this.player.animations.play('dead');
 			this.timedEvent = this.time.delayedCall(500, onEvent, [], this);
@@ -193,12 +195,12 @@ var level_01 = {
 		if (this.player.x < enemy.x && Math.abs(this.player.x - enemy.x) < 200 && walkAnim){
 			enemy.body.velocity.x = -speed;
 			enemy.animations.play('walk_left');
-			console.log("walk left");
+			//console.log("walk left");
 			}
 		else if(Math.abs(this.player.x - enemy.x) < 300 && walkAnim) {
 			enemy.body.velocity.x = speed;
 			enemy.animations.play('walk_right');
-			console.log("walk right");
+			//console.log("walk right");
 			}
 		//else{
 		//	enemy.body.velocity.x = 0;
@@ -228,12 +230,11 @@ var level_01 = {
 			console.log("attack left");
 			if(Math.abs(xClose + yClose) < 20){
 				if(this.frame_counter % 50 == 0){
-					this.player.health -= 5;
 					game.global.health -= 5;
-					console.log("strike left");
+					console.log("strike left" + game.global.health);
 				}
 			}
-			this.myHealthBar.setPercent(this.player.health / 100);
+			this.myHealthBar.setPercent(game.global.health / 100);
 		}
 		else{
 			console.log(Math.abs(xClose + yClose));
@@ -243,12 +244,11 @@ var level_01 = {
 			console.log("attack_right");
 			if(Math.abs(xClose + yClose) < 120){
 				if(this.frame_counter % 50 == 0){
-					this.player.health -= 5;
 					game.global.health -= 5;
-					console.log("strike right" + this.player.health);
+					console.log("strike right" + game.global.health);
 				}
 			}
-			this.myHealthBar.setPercent(this.player.health / 100);
+			this.myHealthBar.setPercent(game.global.health / 100);
 		}
 		if (this.player.y < enemy.y) {
 			enemy.body.velocity.y = -50;

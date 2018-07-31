@@ -102,7 +102,6 @@ var level_05 = {
 
 		// Adding the knight atlas that contains all the animations
 		this.player = game.add.sprite(game.camera.width / 2, game.camera.height / 2, 'knight_atlas');
-		this.player.health = game.global.health;
 
 		//Add the treasure chest
 		this.chest = game.add.sprite(game.camera.width / 2, game.camera.height / 2, 'chest');
@@ -123,7 +122,8 @@ var level_05 = {
             flipped: false
 		};
 		
-        this.myHealthBar = new HealthBar(this.game, this.barConfig);
+		this.myHealthBar = new HealthBar(this.game, this.barConfig);
+		this.myHealthBar.setPercent(game.global.health / 100);
 
 		this.enemy = game.add.sprite(1900, 1900, 'knight_atlas');
 		this.enemy.health = 100;
@@ -166,6 +166,9 @@ var level_05 = {
 		this.player.x = 2080;
 		this.player.y = 2080;
 
+		// flag to stop movement if character dies
+		this.alive = true;
+
 		this.enemy.body.collideWorldBounds = true;
 
 		// set the anchor for sprite to middle of the view
@@ -201,7 +204,7 @@ var level_05 = {
 		game.physics.arcade.collide(this.player, this.enemy);
 		game.physics.arcade.collide(this.player, this.chest);
 
-		if(this.player.health == 0){
+		if(game.global.health == 0){
 			this.walkAnim = false;
 			this.player.animations.play('dead');
 			this.timedEvent = this.time.delayedCall(500, onEvent, [], this);
@@ -262,12 +265,11 @@ var level_05 = {
 			console.log("attack left");
 			if(Math.abs(xClose + yClose) < 20){
 				if(this.frame_counter % 50 == 0){
-					this.player.health -= 5;
 					game.global.health -= 5;
 					console.log("strike left");
 				}
 			}
-			this.myHealthBar.setPercent(this.player.health / 100);
+			this.myHealthBar.setPercent(game.global.health / 100);
 		}
 		else{
 			console.log(Math.abs(xClose + yClose));
@@ -277,12 +279,11 @@ var level_05 = {
 			console.log("attack_right");
 			if(Math.abs(xClose + yClose) < 120){
 				if(this.frame_counter % 50 == 0){
-					this.player.health -= 5;
 					game.global.health -= 5;
-					console.log("strike right" + this.player.health);
+					console.log("strike right" + game.global.health);
 				}
 			}
-			this.myHealthBar.setPercent(this.player.health / 100);
+			this.myHealthBar.setPercent(game.global.health / 100);
 		}
 		if (this.player.y < enemy.y) {
 			enemy.body.velocity.y = -50;

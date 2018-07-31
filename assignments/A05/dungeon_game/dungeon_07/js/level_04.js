@@ -102,7 +102,6 @@ var level_04 = {
 
 		// Adding the knight atlas that contains all the animations
 		this.player = game.add.sprite(game.camera.width / 2, game.camera.height / 2, 'knight_atlas');
-		this.player.health = game.global.health;
 
 		//Healthbars
 		this.barConfig = {
@@ -120,7 +119,8 @@ var level_04 = {
             flipped: false
 		};
 		
-        this.myHealthBar = new HealthBar(this.game, this.barConfig);
+		this.myHealthBar = new HealthBar(this.game, this.barConfig);
+		this.myHealthBar.setPercent(game.global.health / 100);
 
 		this.enemy = game.add.sprite(1450, 1980, 'knight_atlas');
 		this.enemy.health = 100;
@@ -165,6 +165,9 @@ var level_04 = {
 		// set the anchor for sprite to middle of the view
 		this.player.anchor.setTo(0.5);
 
+		// flag to stop movement if character dies
+		this.alive = true;
+
 		//this.player.scale.setTo(0.5);
 
 		// turn physics on for enemy
@@ -199,7 +202,7 @@ var level_04 = {
 		game.physics.arcade.collide(this.enemy, this.layers.collision_layer);
 		game.physics.arcade.collide(this.player, this.enemy);
 
-		if(this.player.health == 0){
+		if(game.global.health == 0){
 			this.walkAnim = false;
 			this.player.animations.play('dead');
 			this.timedEvent = this.time.delayedCall(500, onEvent, [], this);
@@ -260,12 +263,11 @@ var level_04 = {
 			console.log("attack left");
 			if(Math.abs(xClose + yClose) < 20){
 				if(this.frame_counter % 50 == 0){
-					this.player.health -= 5;
 					game.global.health -= 5;
 					console.log("strike left");
 				}
 			}
-			this.myHealthBar.setPercent(this.player.health / 100);
+			this.myHealthBar.setPercent(game.global.health / 100);
 		}
 		else{
 			console.log(Math.abs(xClose + yClose));
@@ -275,12 +277,11 @@ var level_04 = {
 			console.log("attack_right");
 			if(Math.abs(xClose + yClose) < 120){
 				if(this.frame_counter % 50 == 0){
-					this.player.health -= 5;
 					game.global.health -= 5;
-					console.log("strike right" + this.player.health);
+					console.log("strike right" + game.global.health);
 				}
 			}
-			this.myHealthBar.setPercent(this.player.health / 100);
+			this.myHealthBar.setPercent(game.global.health / 100);
 		}
 		if (this.player.y < enemy.y) {
 			enemy.body.velocity.y = -50;
@@ -304,8 +305,7 @@ var level_04 = {
 		} else if (player.y < game.height) {
 			// go somewhere
 		} else if (player.y > game.height) {
-// Display health bar
-		this.myHealthBar.setPosition(this.player.x, this.player.y - 35);			// go somewhere
+			// go somewhere
 		}
 	},
 
@@ -334,6 +334,9 @@ var level_04 = {
 		// Each key changes the players velocity in the x or y direction
 		// and plays the proper animation. It sets the prevDir so we can
 		// face the correct way when stopped.
+
+		// Display health bar
+		this.myHealthBar.setPosition(this.player.x, this.player.y - 35);
 	
 		// Walk left
 		if (k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.SHIFT))
