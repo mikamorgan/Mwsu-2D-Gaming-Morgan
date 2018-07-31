@@ -204,9 +204,11 @@ var level_02 = {
 		game.physics.arcade.collide(this.player, this.enemy);
 
 		if(game.global.health == 0){
-			this.walkAnim = false;
 			this.player.animations.play('dead');
-			this.timedEvent = this.time.delayedCall(1000, onEvent, [], this);
+			this.alive = false;
+
+			// go to game over screen after the death animation plays
+			this.player.animations.currentAnim.onComplete.add(this.endGame, this);
 		}
 
 		if(this.enemy.health == 0){
@@ -217,6 +219,11 @@ var level_02 = {
 		}
 
 		this.checkPlayerTransport(this.player);
+	},
+
+	// End game if player dies
+	endGame: function () {
+		game.state.start('gameOver');
 	},
 
 		// Very basic move monster towards player function.
@@ -604,16 +611,6 @@ var level_02 = {
 				}
 				this.player.body.velocity.y = -20;
 				this.player.animations.currentAnim.onLoop.add(this.endJump, this);
-			}
-	
-			// dead
-			if(k.isDown(Phaser.Keyboard.ENTER))
-			{
-			this.player.animations.play('dead');
-			this.alive = false;
-	
-			// go to game over screen after the death animation plays
-			this.player.animations.currentAnim.onComplete.add(this.endGame, this);
 			}
 		},
 	
