@@ -6,6 +6,7 @@ var level_05 = {
 		game.load.tilemap('level_05', 'assets/maps/cave2.json', null, Phaser.Tilemap.TILED_JSON);
 
 		//map tile images:
+		game.load.image("chest","assets/images/treasure_chest.jpg");
         game.load.image("brown","assets/tileset/ground/brown.png");
         game.load.image("skull_dark","assets/tileset/item/corpse/skull_dark.png");
         game.load.image("grey_stone","assets/tileset/item/statue/grey_stone.png");
@@ -103,6 +104,9 @@ var level_05 = {
 		this.player = game.add.sprite(game.camera.width / 2, game.camera.height / 2, 'knight_atlas');
 		this.player.health = game.global.health;
 
+		//Add the treasure chest
+		this.chest = game.add.sprite(game.camera.width / 2, game.camera.height / 2, 'chest');
+
 		//Healthbars
 		this.barConfig = {
             width: 50,
@@ -149,8 +153,10 @@ var level_05 = {
 		this.enemy.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
 		this.enemy.animations.play('idle_right');
 
-		// turn physics on for player
+		// turn physics on for sprites
 		game.physics.arcade.enable(this.player);
+		game.physics.arcade.enable(this.enemy);
+		game.physics.arcade.enable(this.chest);
 
 		// tell camera to follow sprite now that we're on a map
 		// and can move out of bounds
@@ -159,9 +165,6 @@ var level_05 = {
 		// set starting location for player in some middle spot in the map
 		this.player.x = 2080;
 		this.player.y = 2080;
-
-		// turn physics on for enemy
-		game.physics.arcade.enable(this.enemy);
 
 		this.enemy.body.collideWorldBounds = true;
 
@@ -196,6 +199,7 @@ var level_05 = {
 		game.physics.arcade.collide(this.player, this.layers.collision_layer);
 		game.physics.arcade.collide(this.enemy, this.layers.collision_layer);
 		game.physics.arcade.collide(this.player, this.enemy);
+		game.physics.arcade.collide(this.player, this.chest);
 
 		if(this.player.health == 0){
 			this.walkAnim = false;
@@ -493,6 +497,10 @@ var level_05 = {
 			else{
 				this.player.animations.play('attack_right')
 			}
+
+			//decrease enemy health if within attack range
+			if(Math.abs(this.player.x - this.enemy.x) < 80){
+				this.enemy.health --;}
 		}
 
 		// jump attack
@@ -507,6 +515,10 @@ var level_05 = {
 			}
 			this.player.body.velocity.y = -20;
 			this.player.animations.currentAnim.onLoop.add(this.endJump, this);
+
+			//decrease enemy health if within attack range
+			if(Math.abs(this.player.x - this.enemy.x) < 80){
+				this.enemy.health --;}
 		}
 
 		// jump

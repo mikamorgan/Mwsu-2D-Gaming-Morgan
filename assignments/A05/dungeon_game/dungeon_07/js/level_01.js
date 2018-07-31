@@ -450,6 +450,10 @@ var level_01 = {
 			else{
 				this.player.animations.play('attack_right')
 			}
+
+			//decrease enemy health if within attack range
+		if(Math.abs(this.player.x - this.enemy.x) < 80){
+			this.enemy.health --;}
 		}
 
 		// jump attack
@@ -464,6 +468,10 @@ var level_01 = {
 			}
 			this.player.body.velocity.y = -20;
 			this.player.animations.currentAnim.onLoop.add(this.endJump, this);
+
+			//decrease enemy health if within attack range
+			if(Math.abs(this.player.x - this.enemy.x) < 80){
+				this.enemy.health --;}
 		}
 
 		// jump
