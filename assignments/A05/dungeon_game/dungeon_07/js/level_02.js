@@ -103,9 +103,13 @@ var level_02 = {
 		this.player = game.add.sprite(game.camera.width / 2, game.camera.height / 2, 'knight_atlas');
 		console.log(game.global.health);
 
-		// Adding enemy (using same sprite as knight)
+		// Adding enemy
 		this.enemy = game.add.sprite(300, 700, 'knight_atlas');
 		this.enemy.health = 100;
+
+		// Adding second enemy
+		this.enemy2 = game.add.sprite(1300, 1700, 'knight_atlas');
+		this.enemy2.health = 100;
 
 		//Healthbars
 		this.barConfig = {
@@ -151,6 +155,15 @@ var level_02 = {
 		this.enemy.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
 		this.enemy.animations.play('idle_left');
 
+		// Add walking and idle animations for the second enemy.
+		this.enemy2.animations.add('walk_left', Phaser.Animation.generateFrameNames('Walk_left', 0, 8), 20, true);
+		this.enemy2.animations.add('walk_right', Phaser.Animation.generateFrameNames('Walk_right', 0, 8), 20, true);
+		this.enemy2.animations.add('idle_left', Phaser.Animation.generateFrameNames('Idle_left', 0, 9), 20, true);
+		this.enemy2.animations.add('idle_right', Phaser.Animation.generateFrameNames('Idle_right', 0, 9), 20, true);
+		this.enemy2.animations.add('attack_left', Phaser.Animation.generateFrameNames('Attack_left', 0, 9), 20, true);
+		this.enemy2.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
+		this.enemy2.animations.play('idle_left');
+
 		// turn physics on for player
 		game.physics.arcade.enable(this.player);
 
@@ -160,8 +173,11 @@ var level_02 = {
 
 		// turn physics on for enemy
 		game.physics.arcade.enable(this.enemy);
-
 		this.enemy.body.collideWorldBounds = true;
+
+		// turn physics on for second enemy
+		game.physics.arcade.enable(this.enemy2);
+		this.enemy2.body.collideWorldBounds = true;
 
 		// flag to stop movement if character dies
 		this.alive = true;
@@ -196,11 +212,13 @@ var level_02 = {
 		}
 
 		this.moveTowardPlayer(this.enemy, 50, this.flag, this.walkAnim);
+		this.moveTowardPlayer(this.enemy2, 50, this.flag, this.walkAnim);
 		this.checkPlayerTransport(this.player);
 
 		// Necessary to make sure we always check player colliding with objects
 		game.physics.arcade.collide(this.player, this.layers.collision_layer);
 		game.physics.arcade.collide(this.enemy, this.layers.collision_layer);
+		game.physics.arcade.collide(this.enemy2, this.layers.collision_layer);
 		game.physics.arcade.collide(this.player, this.enemy);
 
 		if(game.global.health == 0){
@@ -217,6 +235,14 @@ var level_02 = {
 			//this.sound.kill.play();
 			this.flag = false;
 		}
+
+		if(this.enemy2.health == 0){
+			this.enemy2.kill();
+			this.enemy2.destroy();
+			//this.sound.kill.play();
+			this.flag = false;
+		}
+
 
 		this.checkPlayerTransport(this.player);
 	},
@@ -239,10 +265,6 @@ var level_02 = {
 			enemy.animations.play('walk_right');
 			console.log("walk right");
 			}
-		//else{
-		//	enemy.body.velocity.x = 0;
-		//	enemy.body.velocity.y = 0;
-		//}
 		if (this.player.y < enemy.y) {
 			enemy.body.velocity.y = -speed;
 		} else {
@@ -383,7 +405,7 @@ var level_02 = {
 		}, 500, Phaser.Easing.Linear.None, true);
 	},
 	checkPlayerTransport: function (player) {
-		if (player.x > 1411) {
+		if (player.x > 2411) {
 			game.global.current_level = 'level_03';
 			game.state.start(game.global.current_level);
 		} else if (player.x > game.width) {
@@ -596,6 +618,10 @@ var level_02 = {
 				//decrease enemy health if within attack range
 			if(Math.abs(this.player.x - this.enemy.x) < 80){
 				this.enemy.health --;}
+
+				//decrease second enemy health if within attack range
+			if(Math.abs(this.player.x - this.enemy2.x) < 80){
+				this.enemy2.health --;}
 			}
 	
 			// jump
