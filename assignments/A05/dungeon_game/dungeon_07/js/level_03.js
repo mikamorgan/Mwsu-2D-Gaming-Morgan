@@ -99,8 +99,13 @@ var level_03 = {
 		this.myHealthBar = new HealthBar(this.game, this.barConfig);
 		this.myHealthBar.setPercent(game.global.health / 100);
 
+		// Add enemy sprite
 		this.enemy = game.add.sprite(300, 700, 'knight_atlas');
 		this.enemy.health = 100;
+
+		// Add second enemy sprite
+		this.enemy2 = game.add.sprite(3660, 1050, 'knight_atlas');
+		this.enemy2.health = 100;
 	
 
 		// Add walking and idle animations. Different aninmations are needed based on direction of movement.
@@ -128,29 +133,35 @@ var level_03 = {
 		this.enemy.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
 		this.enemy.animations.play('idle_right');
 
+		// Add walking and idle animations for the second enemy.
+		this.enemy2.animations.add('walk_left', Phaser.Animation.generateFrameNames('Walk_left', 0, 8), 20, true);
+		this.enemy2.animations.add('walk_right', Phaser.Animation.generateFrameNames('Walk_right', 0, 8), 20, true);
+		this.enemy2.animations.add('idle_left', Phaser.Animation.generateFrameNames('Idle_left', 0, 9), 20, true);
+		this.enemy2.animations.add('idle_right', Phaser.Animation.generateFrameNames('Idle_right', 0, 9), 20, true);
+		this.enemy2.animations.add('attack_left', Phaser.Animation.generateFrameNames('Attack_left', 0, 9), 20, true);
+		this.enemy2.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
+		this.enemy2.animations.play('idle_left');
+
 		// turn physics on for player
 		game.physics.arcade.enable(this.player);
 
 		// turn physics on for enemy
 		game.physics.arcade.enable(this.enemy);
-
 		this.enemy.body.collideWorldBounds = true;
+
+		// turn physics on for second enemy
+		game.physics.arcade.enable(this.enemy2);
+		this.enemy2.body.collideWorldBounds = true;
 
 		// tell camera to follow sprite now that we're on a map
 		// and can move out of bounds
 		game.camera.follow(this.player);
-
-		// // set starting location for player in some middle spot in the map
-		// this.player.x = 1728;
-		// this.player.y = 1024;
 
 		// flag to stop movement if character dies
 		this.alive = true;
 
 		// set the anchor for sprite to middle of the view
 		this.player.anchor.setTo(0.5);
-
-		this.player.scale.setTo(1.75);
 
 		this.downKey = game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
 		this.upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
@@ -161,7 +172,9 @@ var level_03 = {
 		game.addPauseButton(game);
 
 		this.flag = true;
+		this.flag2 = true;
 		this.walkAnim = true;
+		this.walkAnim2 = true;
 
 		this.frame_counter = 0;
 	},
@@ -175,11 +188,13 @@ var level_03 = {
 		this.frame_counter++;
 
 		this.moveTowardPlayer(this.enemy, 50, this.flag, this.walkAnim);
+		this.moveTowardPlayer(this.enemy2, 70, this.flag2, this.walkAnim2);
 		this.checkPlayerTransport(this.player);
 
 		// Necessary to make sure we always check player colliding with objects
 		game.physics.arcade.collide(this.player, this.layers.collision_layer);
 		game.physics.arcade.collide(this.enemy, this.layers.collision_layer);
+		game.physics.arcade.collide(this.enemy2, this.layers.collision_layer);
 		game.physics.arcade.collide(this.player, this.enemy);
 
 		if(game.global.health == 0){
@@ -197,6 +212,13 @@ var level_03 = {
 			this.flag = false;
 		}
 
+		if(this.enemy2.health == 0){
+			this.enemy2.kill();
+			this.enemy2.destroy();
+			//this.sound.kill.play();
+			this.flag2 = false;
+		}
+
 	},
 
 	// End game if player dies
@@ -207,26 +229,26 @@ var level_03 = {
 		// Very basic move monster towards player function.
 	moveTowardPlayer: function (enemy, speed, flag, walkAnim) {
 		if(flag){
-		if (this.player.x < enemy.x && Math.abs(this.player.x - enemy.x) < 200 && walkAnim){
+		if(Math.abs(this.player.x - enemy.x) < 200)	{
+		if (this.player.x < enemy.x && walkAnim){
 			enemy.body.velocity.x = -speed;
 			enemy.animations.play('walk_left');
 			console.log("walk left");
 			}
-		else if(Math.abs(this.player.x - enemy.x) < 300 && walkAnim) {
+		else if(walkAnim) {
 			enemy.body.velocity.x = speed;
 			enemy.animations.play('walk_right');
 			console.log("walk right");
 			}
-		//else{
-		//	enemy.body.velocity.x = 0;
-		//	enemy.body.velocity.y = 0;
-		//}
-		if (this.player.y < enemy.y) {
-			enemy.body.velocity.y = -speed;
-		} else {
-			enemy.body.velocity.y = speed;
 		}
-		this.checkAttack(enemy, walkAnim);
+		if(Math.abs(this.player.y - enemy.y) < 200)	{
+			if (this.player.y < enemy.y) {
+				enemy.body.velocity.y = -speed;
+			} else {
+				enemy.body.velocity.y = speed;
+			}
+			this.checkAttack(enemy, walkAnim);
+			}
 		}
 	},
 
@@ -483,6 +505,9 @@ var level_03 = {
 			//decrease enemy health if within attack range
 			if(Math.abs(this.player.x - this.enemy.x) < 80){
 				this.enemy.health --;}
+			//decrease second enemy health if within attack range
+			if(Math.abs(this.player.x - this.enemy2.x) < 80){
+				this.enemy2.health --;}
 		}
 
 		// jump attack
@@ -501,6 +526,9 @@ var level_03 = {
 			//decrease enemy health if within attack range
 			if(Math.abs(this.player.x - this.enemy.x) < 80){
 				this.enemy.health --;}
+			//decrease second enemy health if within attack range
+			if(Math.abs(this.player.x - this.enemy2.x) < 80){
+				this.enemy2.health --;}
 		}
 
 		// jump

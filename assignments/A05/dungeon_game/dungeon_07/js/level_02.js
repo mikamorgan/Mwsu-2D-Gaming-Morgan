@@ -195,7 +195,9 @@ var level_02 = {
 		//this.addPauseButton(game);
 
 		this.flag = true;
+		this.flag2 = true;
 		this.walkAnim = true;
+		this.walkAnim2 = true;
 
 		this.frame_counter = 0;
 	},
@@ -212,7 +214,7 @@ var level_02 = {
 		}
 
 		this.moveTowardPlayer(this.enemy, 50, this.flag, this.walkAnim);
-		this.moveTowardPlayer(this.enemy2, 50, this.flag, this.walkAnim);
+		this.moveTowardPlayer(this.enemy2, 50, this.flag2, this.walkAnim2);
 		this.checkPlayerTransport(this.player);
 
 		// Necessary to make sure we always check player colliding with objects
@@ -240,7 +242,7 @@ var level_02 = {
 			this.enemy2.kill();
 			this.enemy2.destroy();
 			//this.sound.kill.play();
-			this.flag = false;
+			this.flag2 = false;
 		}
 
 
@@ -405,7 +407,7 @@ var level_02 = {
 		}, 500, Phaser.Easing.Linear.None, true);
 	},
 	checkPlayerTransport: function (player) {
-		if (player.x > 2411) {
+		if (player.x > 1411) {
 			game.global.current_level = 'level_03';
 			game.state.start(game.global.current_level);
 		} else if (player.x > game.width) {

@@ -164,7 +164,10 @@ var level_01 = {
 		k = game.input.keyboard;
 
 		this.flag = true;
-		this.walkAnim = true;
+		this.flag2 = true;
+
+		// this.walkAnim = true;
+		// this.walkAnim2 = true;
 
 		this.frame_counter = 0;
 	},
@@ -175,8 +178,8 @@ var level_01 = {
 
 		this.frame_counter++;
 
-		this.moveTowardPlayer(this.enemy, 50, this.flag, this.walkAnim);
-		this.moveTowardPlayer(this.enemy2, 60, this.flag, this.walkAnim);
+		this.moveTowardPlayer(this.enemy, 50, this.flag, this.walkAnim = true);
+		this.moveTowardPlayer(this.enemy2, 60, this.flag2, this.walkAnim2 = true);
 		this.checkPlayerTransport(this.player);
 
 		// Necessary to make sure we always check player colliding with objects
@@ -205,7 +208,7 @@ var level_01 = {
 			this.enemy2.kill();
 			this.enemy2.destroy();
 			//this.sound.kill.play();
-			this.flag = false;
+			this.flag2 = false;
 		}
 	},
 
@@ -237,7 +240,7 @@ var level_01 = {
 		}
 	},
 
-	checkAttack: function (enemy, walkAnim)
+	checkAttack: function (enemy, _walkAnim)
 	{
 		// Get how close players are together 
 		var xClose = Math.abs(this.player.x - enemy.x);
@@ -246,7 +249,7 @@ var level_01 = {
 		if(Math.abs(xClose + yClose) < 150){
 
 		if(this.player.x < enemy.x){
-			this.walkAnim = false;
+			walkAnim = false;
 			enemy.body.velocity.x = -50;
 			enemy.animations.play('attack_left');
 			console.log("attack left");
@@ -260,7 +263,7 @@ var level_01 = {
 		}
 		else{
 			console.log(Math.abs(xClose + yClose));
-			this.walkAnim = false;
+			walkAnim = false;
 			enemy.body.velocity.x = 50;
 			enemy.animations.play('attack_right');
 			console.log("attack_right");
