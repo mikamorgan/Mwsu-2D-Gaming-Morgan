@@ -192,7 +192,9 @@ var level_01 = {
 		k = game.input.keyboard;
 
 		this.flag = true;
+		this.flag2 = true;
 		this.walkAnim = true;
+		this.walkAnim2 = true;
 
 		this.frame_counter = 0;
 	},
@@ -203,8 +205,8 @@ var level_01 = {
 
 		this.frame_counter++;
 
-		this.moveTowardPlayer(this.enemy, 50, this.flag, this.walkAnim);
-		this.moveTowardPlayer(this.enemy2, 60, this.flag, this.walkAnim);
+		this.moveTowardPlayer(this.enemy, 50, this.flag);
+		this.moveTowardPlayer2(this.enemy2, 60, this.flag2);
 		this.checkPlayerTransport(this.player);
 
 		// Transport player if it overlaps a portal
@@ -242,14 +244,13 @@ var level_01 = {
 			this.enemy.destroy();
 			//this.sound.kill.play();
 			this.flag = false;
-			this.walkAnim = true;
 		}
 
 		if(this.enemy2.health == 0){
 			this.enemy2.kill();
 			this.enemy2.destroy();
 			//this.sound.kill.play();
-			this.flag = false;
+			this.flag2 = false;
 		}
 	},
 
@@ -260,14 +261,14 @@ var level_01 = {
 
 
 	 // Very basic move monster towards player function.
-	moveTowardPlayer: function (enemy, speed, flag, walkAnim) {
+	moveTowardPlayer: function (enemy, speed, flag) {
 		if(flag){
-		if (this.player.x < enemy.x && Math.abs(this.player.x - enemy.x) < 200 && walkAnim){
+		if (this.player.x < enemy.x && Math.abs(this.player.x - enemy.x) < 200 && this.walkAnim){
 			enemy.body.velocity.x = -speed;
 			enemy.animations.play('walk_left');
 			//console.log("walk left");
 			}
-		else if(Math.abs(this.player.x - enemy.x) < 300 && walkAnim) {
+		else if(Math.abs(this.player.x - enemy.x) < 300 && this.walkAnim) {
 			enemy.body.velocity.x = speed;
 			enemy.animations.play('walk_right');
 			//console.log("walk right");
@@ -277,11 +278,12 @@ var level_01 = {
 		} else {
 			enemy.body.velocity.y = speed;
 		}
-		this.checkAttack(enemy, walkAnim);
+		
+		this.checkAttack(enemy);
 		}
 	},
 
-	checkAttack: function (enemy, walkAnim)
+	checkAttack: function (enemy)
 	{
 		// Get how close players are together 
 		var xClose = Math.abs(this.player.x - enemy.x);
@@ -293,7 +295,7 @@ var level_01 = {
 			this.walkAnim = false;
 			enemy.body.velocity.x = -50;
 			enemy.animations.play('attack_left');
-			console.log("attack left");
+			//console.log("attack left");
 			if(Math.abs(xClose + yClose) < 80){
 				if(this.frame_counter % 50 == 0){
 					game.global.health -= 5;
@@ -307,11 +309,70 @@ var level_01 = {
 			this.walkAnim = false;
 			enemy.body.velocity.x = 50;
 			enemy.animations.play('attack_right');
-			console.log("attack_right");
+			//console.log("attack_right");
 			if(Math.abs(xClose + yClose) < 120){
 				if(this.frame_counter % 50 == 0){
 					game.global.health -= 5;
 					console.log("strike right" + game.global.health);
+				}
+			}
+			this.myHealthBar.setPercent(game.global.health / 100);
+		}
+		if (this.player.y < enemy.y) {
+			enemy.body.velocity.y = -50;
+		} else {
+			enemy.body.velocity.y = 50;
+		}
+	}
+	},
+
+		// Very basic move monster towards player function.
+		moveTowardPlayer2: function (enemy, speed, flag) {
+		if(flag){
+		if (this.player.x < enemy.x && Math.abs(this.player.x - enemy.x) < 200 && this.walkAnim2){
+			enemy.body.velocity.x = -speed;
+			enemy.animations.play('walk_left');
+			}
+		else if(Math.abs(this.player.x - enemy.x) < 300 && this.walkAnim2) {
+			enemy.body.velocity.x = speed;
+			enemy.animations.play('walk_right');
+			}
+		if (this.player.y < enemy.y) {
+			enemy.body.velocity.y = -speed;
+		} else {
+			enemy.body.velocity.y = speed;
+		}
+		
+		this.checkAttack2(enemy);
+		}
+	},
+
+	checkAttack2: function (enemy)
+	{
+		// Get how close players are together 
+		var xClose = Math.abs(this.player.x - enemy.x);
+		var yClose = Math.abs(this.player.y - enemy.y);
+
+		if(Math.abs(xClose + yClose) < 150){
+
+		if(this.player.x < enemy.x){
+			this.walkAnim2 = false;
+			enemy.body.velocity.x = -50;
+			enemy.animations.play('attack_left');
+			if(Math.abs(xClose + yClose) < 80){
+				if(this.frame_counter % 50 == 0){
+					game.global.health -= 5;
+				}
+			}
+			this.myHealthBar.setPercent(game.global.health / 100);
+		}
+		else{
+			this.walkAnim2 = false;
+			enemy.body.velocity.x = 50;
+			enemy.animations.play('attack_right');
+			if(Math.abs(xClose + yClose) < 120){
+				if(this.frame_counter % 50 == 0){
+					game.global.health -= 5;
 				}
 			}
 			this.myHealthBar.setPercent(game.global.health / 100);
