@@ -122,8 +122,16 @@ var level_04 = {
 		this.myHealthBar = new HealthBar(this.game, this.barConfig);
 		this.myHealthBar.setPercent(game.global.health / 100);
 
+		// Create enemy sprite
 		this.enemy = game.add.sprite(1450, 1980, 'knight_atlas');
 		this.enemy.health = 100;
+
+		// Create two enemy ghost sprites
+		this.ghost = game.add.sprite(300, 1600, 'ghost');
+		this.ghost.health = 100;
+
+		this.ghost2 = game.add.sprite(2973, 610, 'ghost');
+		this.ghost2.health = 100;
 
 		// Create portal sprites
 		this.portal = game.add.sprite(3044, 3090, 'red_portal');
@@ -166,6 +174,24 @@ var level_04 = {
 		this.enemy.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
 		this.enemy.animations.play('idle_right');
 
+		//Add animations for the ghost enemies
+		this.ghost.animations.add('walk_left', [6, 7, 8], 10, true);
+		this.ghost.animations.add('walk_right', [6, 7, 8], 10, true);
+		this.ghost.animations.add('ide_left', [0, 1, 2], 10, true);
+		this.ghost.animations.add('ide_right', [0, 1, 2], 10, true);
+		this.ghost.animations.add('attack_left', [15, 14, 13], 10, true);
+		this.ghost.animations.add('attack_right', [10, 11], 10, true);
+		this.ghost.animations.play('idle_right');
+
+		//Add animations for the ghost enemies
+		this.ghost2.animations.add('walk_left', [6, 7, 8], 10, true);
+		this.ghost2.animations.add('walk_right', [6, 7, 8], 10, true);
+		this.ghost2.animations.add('ide_left', [0, 1, 2], 10, true);
+		this.ghost2.animations.add('ide_right', [0, 1, 2], 10, true);
+		this.ghost2.animations.add('attack_left', [15, 14, 13], 10, true);
+		this.ghost2.animations.add('attack_right', [10, 11], 10, true);
+		this.ghost2.animations.play('idle_right');
+
 		// Ensure multiple coins on path
 		this.coins = game.add.group();
 		this.coins.enableBody = true;
@@ -184,6 +210,8 @@ var level_04 = {
 		// turn physics on for player
 		game.physics.arcade.enable(this.player);
 		game.physics.arcade.enable(this.enemy);
+		game.physics.arcade.enable(this.ghost);
+		game.physics.arcade.enable(this.ghost2);
 		game.physics.arcade.enable(this.portal);
 		game.physics.arcade.enable(this.portal2);
 		game.physics.arcade.enable(this.portal3);
@@ -204,11 +232,18 @@ var level_04 = {
 		this.alive = true;
 
 		this.enemy.body.collideWorldBounds = true;
+		this.ghost.body.collideWorldBounds = true;
+		this.ghost2.body.collideWorldBounds = true;
 
 		k = game.input.keyboard;
 
 		this.flag = true;
+		this.flag2 = true;
+		this.flag3 = true;
+
 		this.walkAnim = true;
+		this.walkAnim2 = true;
+		this.walkAnim3 = true;
 
 		this.frame_counter = 0;
 
@@ -224,12 +259,16 @@ var level_04 = {
 		this.frame_counter++;
 
 		//this.checkAttack(this.player, this.enemy)
-		this.moveTowardPlayer(this.enemy, 50, this.flag, this.walkAnim);
+		this.moveTowardPlayer(this.enemy, 50);
+		this.moveTowardPlayer2(this.ghost, 160);
+		this.moveTowardPlayer3(this.ghost2, 90);
 
 		// Necessary to make sure we always check player colliding with objects
 		game.physics.arcade.collide(this.player, this.layers.collision_layer);
 		game.physics.arcade.collide(this.enemy, this.layers.collision_layer);
 		game.physics.arcade.collide(this.player, this.enemy);
+		game.physics.arcade.collide(this.player, this.ghost);
+		game.physics.arcade.collide(this.player, this.ghost2);
 
 		// Transport player if it crosses a portal
 		game.physics.arcade.overlap(this.player, this.portal, function (player, portal) {game.state.start('level_05');}, null, this);
@@ -263,6 +302,16 @@ var level_04 = {
 			//this.sound.kill.play();
 			this.flag = false;
 		}
+		
+		if(this.ghost.health == 0){
+			this.ghost.kill();
+			this.flag2 = false;
+		}
+
+		if(this.ghost2.health == 0){
+			this.ghost2.kill();
+			this.flag3 = false;
+		}
 
 	},
 
@@ -272,32 +321,28 @@ var level_04 = {
 	},
 
 		// Very basic move monster towards player function.
-	moveTowardPlayer: function (enemy, speed, flag, walkAnim) {
-		if(flag){
-		if (this.player.x < enemy.x && Math.abs(this.player.x - enemy.x) < 200 && walkAnim){
+	moveTowardPlayer: function (enemy, speed) {
+		if(this.flag){
+		if (this.player.x < enemy.x && Math.abs(this.player.x - enemy.x) < 200 && this.walkAnim){
 			enemy.body.velocity.x = -speed;
 			enemy.animations.play('walk_left');
 			console.log("walk left");
 			}
-		else if(Math.abs(this.player.x - enemy.x) < 300 && walkAnim) {
+		else if(Math.abs(this.player.x - enemy.x) < 300 && this.walkAnim) {
 			enemy.body.velocity.x = speed;
 			enemy.animations.play('walk_right');
 			console.log("walk right");
 			}
-		//else{
-		//	enemy.body.velocity.x = 0;
-		//	enemy.body.velocity.y = 0;
-		//}
 		if (this.player.y < enemy.y) {
 			enemy.body.velocity.y = -speed;
 		} else {
 			enemy.body.velocity.y = speed;
 		}
-		this.checkAttack(enemy, walkAnim);
+		this.checkAttack(enemy);
 		}
 	},
 
-	checkAttack: function (enemy, walkAnim)
+	checkAttack: function (enemy)
 	{
 		// Get how close players are together 
 		var xClose = Math.abs(this.player.x - enemy.x);
@@ -321,6 +366,140 @@ var level_04 = {
 		else{
 			console.log(Math.abs(xClose + yClose));
 			this.walkAnim = false;
+			enemy.body.velocity.x = 50;
+			enemy.animations.play('attack_right');
+			console.log("attack_right");
+			if(Math.abs(xClose + yClose) < 120){
+				if(this.frame_counter % 50 == 0){
+					game.global.health -= 5;
+					console.log("strike right" + game.global.health);
+				}
+			}
+			this.myHealthBar.setPercent(game.global.health / 100);
+		}
+		if (this.player.y < enemy.y) {
+			enemy.body.velocity.y = -50;
+		} else {
+			enemy.body.velocity.y = 50;
+		}
+	}
+	},
+
+	moveTowardPlayer3: function (enemy, speed) {
+		if(this.flag3){
+			console.log("in MTP3");
+			console.log(this.walkAnim3);
+		if(Math.abs(this.player.x - enemy.x) < 300 && this.walkAnim3){
+			if (this.player.x < enemy.x){
+				enemy.body.velocity.x = -speed;
+				enemy.animations.play('walk_left');
+				console.log("walk left");
+				console.log(speed);
+				}
+			else{
+				enemy.body.velocity.x = speed;
+				enemy.animations.play('walk_right');
+				console.log("walk right");
+				console.log(speed);
+				}
+		}
+		if (this.player.y < enemy.y) {
+			enemy.body.velocity.y = -speed;
+		} else {
+			enemy.body.velocity.y = speed;
+		}
+		this.checkAttack3(enemy);
+		}
+	},
+
+	checkAttack3: function (enemy)
+	{
+		// Get how close players are together 
+		var xClose = Math.abs(this.player.x - enemy.x);
+		var yClose = Math.abs(this.player.y - enemy.y);
+
+		if(Math.abs(xClose + yClose) < 100){
+
+		if(this.player.x < enemy.x){
+			this.walkAnim3 = false;
+			enemy.body.velocity.x = -50;
+			enemy.animations.play('attack_left');
+			console.log("attack left");
+			if(Math.abs(xClose + yClose) < 20){
+				if(this.frame_counter % 50 == 0){
+					game.global.health -= 5;
+					console.log("strike left");
+				}
+			}
+			this.myHealthBar.setPercent(game.global.health / 100);
+		}
+		else{
+			console.log(Math.abs(xClose + yClose));
+			this.walkAnim3 = false;
+			enemy.body.velocity.x = 50;
+			enemy.animations.play('attack_right');
+			console.log("attack_right");
+			if(Math.abs(xClose + yClose) < 120){
+				if(this.frame_counter % 50 == 0){
+					game.global.health -= 5;
+					console.log("strike right" + game.global.health);
+				}
+			}
+			this.myHealthBar.setPercent(game.global.health / 100);
+		}
+		if (this.player.y < enemy.y) {
+			enemy.body.velocity.y = -50;
+		} else {
+			enemy.body.velocity.y = 50;
+		}
+	}
+	},
+
+	moveTowardPlayer2: function (enemy, speed) {
+		if(this.flag2){
+		if (this.player.x < enemy.x && Math.abs(this.player.x - enemy.x) < 200 && this.walkAnim2){
+			enemy.body.velocity.x = -speed;
+			enemy.animations.play('walk_left');
+			console.log("walk left");
+			}
+		else if(Math.abs(this.player.x - enemy.x) < 300 && this.walkAnim2) {
+			enemy.body.velocity.x = speed;
+			enemy.animations.play('walk_right');
+			console.log("walk right");
+			}
+		if (this.player.y < enemy.y) {
+			enemy.body.velocity.y = -speed;
+		} else {
+			enemy.body.velocity.y = speed;
+		}
+		this.checkAttack2(enemy);
+		}
+	},
+
+	checkAttack2: function (enemy)
+	{
+		// Get how close players are together 
+		var xClose = Math.abs(this.player.x - enemy.x);
+		var yClose = Math.abs(this.player.y - enemy.y);
+
+		if(Math.abs(xClose + yClose) < 100){
+
+		if(this.player.x < enemy.x){
+			this.walkAnim2 = false;
+			enemy.body.velocity.x = -50;
+			enemy.animations.play('attack_left');
+			console.log("attack left");
+			if(Math.abs(xClose + yClose) < 20){
+				if(this.frame_counter % 50 == 0){
+					game.global.health -= 5;
+					console.log("strike left");
+				}
+			}
+			this.myHealthBar.setPercent(game.global.health / 100);
+		}
+		else{
+			console.log(Math.abs(xClose + yClose));
+			this.walkAnim2 = false;
 			enemy.body.velocity.x = 50;
 			enemy.animations.play('attack_right');
 			console.log("attack_right");
@@ -531,6 +710,12 @@ var level_04 = {
 			//decrease enemy health if within attack range
 			if(Math.abs(this.player.x - this.enemy.x) < 80){
 				this.enemy.health --;}
+			//decrease enemy health if within attack range
+			if(Math.abs(this.player.x - this.ghost.x) < 80){
+				this.ghost.health --;}
+			//decrease enemy health if within attack range
+			if(Math.abs(this.player.x - this.ghost2.x) < 80){
+				this.ghost2.health --;}
 		}
 
 		// jump attack
@@ -549,6 +734,12 @@ var level_04 = {
 			//decrease enemy health if within attack range
 			if(Math.abs(this.player.x - this.enemy.x) < 80){
 				this.enemy.health --;}
+			//decrease enemy health if within attack range
+			if(Math.abs(this.player.x - this.ghost.x) < 80){
+				this.ghost.health --;}
+			//decrease enemy health if within attack range
+			if(Math.abs(this.player.x - this.ghost2.x) < 80){
+				this.ghost2.health --;}
 		}
 
 		// jump
