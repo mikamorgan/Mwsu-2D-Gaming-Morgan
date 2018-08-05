@@ -105,11 +105,11 @@ var level_03 = {
 		this.myHealthBar = new HealthBar(this.game, this.barConfig);
 		this.myHealthBar.setPercent(game.global.health / 100);
 
-		this.enemy = game.add.sprite(300, 700, 'knight_atlas');
+		this.enemy = game.add.sprite(300, 700, 'ghost');
 		this.enemy.health = 100;
 
 		// Adding second enemy
-		this.enemy2 = game.add.sprite(3747, 1032, 'knight_atlas');
+		this.enemy2 = game.add.sprite(3747, 1032, 'ghost');
 		this.enemy2.health = 100;
 	
 		// Ensure multiple coins on the path
@@ -147,21 +147,21 @@ var level_03 = {
 		this.player.animations.play('idle_left');
 
 		// Add walking and idle animations for the enemy.
-		this.enemy.animations.add('walk_left', Phaser.Animation.generateFrameNames('Walk_left', 0, 8), 20, true);
-		this.enemy.animations.add('walk_right', Phaser.Animation.generateFrameNames('Walk_right', 0, 8), 20, true);
-		this.enemy.animations.add('idle_left', Phaser.Animation.generateFrameNames('Idle_left', 0, 9), 20, true);
-		this.enemy.animations.add('idle_right', Phaser.Animation.generateFrameNames('Idle_right', 0, 9), 20, true);
-		this.enemy.animations.add('attack_left', Phaser.Animation.generateFrameNames('Attack_left', 0, 9), 20, true);
-		this.enemy.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
+		this.enemy.animations.add('walk_left', [6, 7, 8], 10, true);
+		this.enemy.animations.add('walk_right', [6, 7, 8], 10, true);
+		this.enemy.animations.add('ide_left', [0, 1, 2], 10, true);
+		this.enemy.animations.add('ide_right', [0, 1, 2], 10, true);
+		this.enemy.animations.add('attack_left', [15, 14, 13], 10, true);
+		this.enemy.animations.add('attack_right', [10, 11], 10, true);
 		this.enemy.animations.play('idle_right');
 
 		// Add walking and idle animations for the second enemy.
-		this.enemy2.animations.add('walk_left', Phaser.Animation.generateFrameNames('Walk_left', 0, 8), 20, true);
-		this.enemy2.animations.add('walk_right', Phaser.Animation.generateFrameNames('Walk_right', 0, 8), 20, true);
-		this.enemy2.animations.add('idle_left', Phaser.Animation.generateFrameNames('Idle_left', 0, 9), 20, true);
-		this.enemy2.animations.add('idle_right', Phaser.Animation.generateFrameNames('Idle_right', 0, 9), 20, true);
-		this.enemy2.animations.add('attack_left', Phaser.Animation.generateFrameNames('Attack_left', 0, 9), 20, true);
-		this.enemy2.animations.add('attack_right', Phaser.Animation.generateFrameNames('Attack_right', 0, 9), 20, true);
+		this.enemy2.animations.add('walk_left', [6, 7, 8], 10, true);
+		this.enemy2.animations.add('walk_right', [6, 7, 8], 10, true);
+		this.enemy2.animations.add('ide_left', [0, 1, 2], 10, true);
+		this.enemy2.animations.add('ide_right', [0, 1, 2], 10, true);
+		this.enemy2.animations.add('attack_left', [15, 14, 13], 10, true);
+		this.enemy2.animations.add('attack_right', [10, 11], 10, true);
 		this.enemy2.animations.play('idle_left');
 
 		// turn physics on for player

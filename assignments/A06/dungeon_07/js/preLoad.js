@@ -27,9 +27,11 @@ var preLoad = {
 		//game.load.spritesheet('spritesheetKey', 'path/to/sheet.png', frame_width, frame_height);
 		game.load.atlas('knight_atlas', 'assets/sprites/knight_atlas.png', 'assets/sprites/knight_atlas.json');
 		game.load.atlas('red_portal', 'assets/sprites/red_portal.png', 'assets/sprites/red_portal.json');
+		game.load.atlas('monster', 'assets/sprites/spritesheet.png', 'assets/sprites/sprites.json');
 		game.load.spritesheet('portal_smoke', 'assets/sprites/smoke.png', 128, 128);
 		game.load.spritesheet('chest','assets/images/treasure_chest_anim.png', 131, 141);
 		game.load.spritesheet('ghost', 'assets/images/ghost_sprite.png', 46.6, 48);
+		game.load.spritesheet('monster', 'assets/images/Monster.png', 100, 84);
 		
 		// load audio here: 
 		//game.load.audio('kill', 'assets/sounds/Ouch.ogg')
