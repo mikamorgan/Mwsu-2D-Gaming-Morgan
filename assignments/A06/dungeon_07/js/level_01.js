@@ -28,6 +28,12 @@ var level_01 = {
 
 		game.physics.startSystem(Phaser.Physics.ARCADE);
 
+		// applies HUD
+		this.hud = new Hud(game, 150, 150);
+    	this.hud.addTitle();
+    	this.hud.trackValue(game.global, "health");
+    	this.hud.trackValue(game.global, "coins");
+
 		// Mapping layers and tilesets
 		/////////////////////////////////////////////////
 		this.map = game.add.tilemap('level_01');
@@ -202,6 +208,8 @@ var level_01 = {
 	update: function () {
 
 		this.move();
+
+		this.hud.displayHud();
 
 		this.frame_counter++;
 
@@ -400,9 +408,9 @@ var level_01 = {
 
 	render: function () 
 	{
-		game.debug.bodyInfo(this.player, 16, 24);
+		//game.debug.bodyInfo(this.player, 16, 24);
 		// Instructions:
-		game.debug.text("Go all the way left to exit this level...", game.width / 2, game.height - 10);
+		//game.debug.text("Go all the way left to exit this level...", game.width / 2, game.height - 10);
 	},
 
 	move: function()
