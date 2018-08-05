@@ -535,227 +535,227 @@ var level_02 = {
 
 	move: function()
 	{
-		// Each key changes the players velocity in the x or y direction
-		// and plays the proper animation. It sets the prevDir so we can
-		// face the correct way when stopped.
+	// Each key changes the players velocity in the x or y direction
+	// and plays the proper animation. It sets the prevDir so we can
+	// face the correct way when stopped.
 
-		// Display health bar
-		this.myHealthBar.setPosition(this.player.x, this.player.y - 35)
-	
-			// Walk left
-			if (k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.SHIFT))
+	// Display health bar
+	this.myHealthBar.setPosition(this.player.x, this.player.y - 35)
+
+		// Walk left
+		if (k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.SHIFT))
+		{
+			if(k.isDown(Phaser.Keyboard.UP))
 			{
-				if(k.isDown(Phaser.Keyboard.UP))
-				{
-					this.player.body.velocity.x = -200;
-					this.player.body.velocity.y = -200;
-				}
-				else if(k.isDown(Phaser.Keyboard.DOWN))
-				{
-					this.player.body.velocity.x = -200;
-					this.player.body.velocity.y = 200;
-				}
-				else{
-					this.player.body.velocity.x = -200;
-					this.player.body.velocity.y = 0;
-				}
-				this.player.animations.play('walk_left');
-				this.prevDir = 'left'
-			}
-	
-			// Walk right
-			if (k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.SHIFT)) 
-			{
-				if(k.isDown(Phaser.Keyboard.UP))
-				{
-					this.player.body.velocity.x = 200;
-					this.player.body.velocity.y = -200;
-				}
-				else if(k.isDown(Phaser.Keyboard.DOWN)){
-					this.player.body.velocity.x = 200;
-					this.player.body.velocity.y = 200;
-				}
-				else
-				{
-					this.player.body.velocity.x = 200;
-					this.player.body.velocity.y = 0;
-				}
-				this.player.animations.play('walk_right');
-				this.prevDir = 'right'
-			}
-	
-			// Run left
-			if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.LEFT)) 
-			{
-				if(k.isDown(Phaser.Keyboard.UP))
-				{
-					this.player.body.velocity.x = -400;
-					this.player.body.velocity.y = -400;
-				}
-				else if(k.isDown(Phaser.Keyboard.DOWN))
-				{
-					this.player.body.velocity.x = -400;
-					this.player.body.velocity.y = 400;
-				}
-				else{
-					this.player.body.velocity.x = -400;
-					this.player.body.velocity.y = 0;
-				}
-				this.player.animations.play('run_left');
-				this.prevDir = 'left'
-			}
-	
-			// Run right
-			if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.RIGHT)) 
-			{
-				if(k.isDown(Phaser.Keyboard.UP))
-				{
-					this.player.body.velocity.x = 400;
-					this.player.body.velocity.y = -400;
-				}
-				else if(k.isDown(Phaser.Keyboard.DOWN))
-				{
-					this.player.body.velocity.x = 400;
-					this.player.body.velocity.y = 400;
-				}
-				else{
-					this.player.body.velocity.x = 400;
-					this.player.body.velocity.y = 0;
-				}
-				this.player.animations.play('run_right');
-				this.prevDir = 'right'
-			}
-	
-			// Walk up
-			if (k.isDown(Phaser.Keyboard.UP))
-			{
-				if(k.isDown(Phaser.Keyboard.LEFT))
-				{
-					this.player.body.velocity.x = -200;
-					this.player.animations.play('walk_left');
-	
-				}
-				else if(k.isDown(Phaser.Keyboard.RIGHT))
-				{
-					this.player.body.velocity.x = 200;
-					this.player.animations.play('walk_right');
-				}
-				else{
-					this.player.body.velocity.x = 0;
-					if(this.prevDir == 'left'){
-						this.player.animations.play('walk_left');
-					}else{
-						this.player.animations.play('walk_right');
-					}
-				}
+				this.player.body.velocity.x = -200;
 				this.player.body.velocity.y = -200;
 			}
-	
-			// Walk down
-			if (k.isDown(Phaser.Keyboard.DOWN))
+			else if(k.isDown(Phaser.Keyboard.DOWN))
 			{
-				if(k.isDown(Phaser.Keyboard.LEFT))
-				{
-					this.player.body.velocity.x = -200;
-					this.player.animations.play('walk_left');
-	
-				}
-				else if(k.isDown(Phaser.Keyboard.RIGHT))
-				{
-					this.player.body.velocity.x = 200;
-					this.player.animations.play('walk_right');
-				}
-				else{
-					this.player.body.velocity.x = 0;
-					if(this.prevDir == 'left'){
-						this.player.animations.play('walk_left');
-					}else{
-						this.player.animations.play('walk_right');
-					}
-				}
+				this.player.body.velocity.x = -200;
 				this.player.body.velocity.y = 200;
 			}
-	
-			// idle
-			if (!k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.UP) 
-			&& !k.isDown(Phaser.Keyboard.DOWN) && !k.isDown(Phaser.Keyboard.SPACEBAR) && !k.isDown(65) 
-			&& !k.isDown(Phaser.Keyboard.ENTER) && !k.isDown(83) && this.alive)
-			{
-				if(this.prevDir == 'left'){
-					this.player.animations.play('idle_left');
-				}else{
-					this.player.animations.play('idle_right');
-				}
-				this.player.body.velocity.x = 0;
+			else{
+				this.player.body.velocity.x = -200;
 				this.player.body.velocity.y = 0;
 			}
-			
-			// attack
-			if (k.isDown(65))
-			{
-				if (this.prevDir == 'left')
-				{
-					this.player.animations.play('attack_left')
-				}
-				else{
-					this.player.animations.play('attack_right')
-				}
+			this.player.animations.play('walk_left');
+			this.prevDir = 'left'
+		}
 
-				//decrease enemy health if within attack range
-			if(Math.abs(this.player.x - this.enemy.x) < 80){
-				this.enemy.health --;}
-				//decrease second enemy health if within attack range
-			if(Math.abs(this.player.x - this.enemy2.x) < 80){
-				this.enemy2.health --;}
-			}
-	
-			// jump attack
-			if (k.isDown(83))
-			{
-				if (this.prevDir == 'left')
-				{
-					this.player.animations.play('jumpattack_left')
-				}
-				else{
-					this.player.animations.play('jumpattack_right')
-				}
-				this.player.body.velocity.y = -20;
-				this.player.animations.currentAnim.onLoop.add(this.endJump, this);
-
-				//decrease enemy health if within attack range
-			if(Math.abs(this.player.x - this.enemy.x) < 80){
-				this.enemy.health --;}
-
-				//decrease second enemy health if within attack range
-			if(Math.abs(this.player.x - this.enemy2.x) < 80){
-				this.enemy2.health --;}
-			}
-	
-			// jump
-			if (k.isDown(Phaser.Keyboard.SPACEBAR)) 
-			{
-				if(this.prevDir == 'left')
-				{
-					this.player.animations.play('jump_left');
-				}
-				else
-				{
-					this.player.animations.play('jump_right');
-				}
-				this.player.body.velocity.y = -20;
-				this.player.animations.currentAnim.onLoop.add(this.endJump, this);
-			}
-		},
-	
-		endJump: function (){
-			this.player.body.velocity.y = 550;
-			console.log("endJump");
-		},
-
-		collectCoins: function (player, coin)
+		// Walk right
+		if (k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.SHIFT)) 
 		{
-			game.global.coins +=1;
-			console.log(game.global.coins);
-			coin.kill();
-		},
+			if(k.isDown(Phaser.Keyboard.UP))
+			{
+				this.player.body.velocity.x = 200;
+				this.player.body.velocity.y = -200;
+			}
+			else if(k.isDown(Phaser.Keyboard.DOWN)){
+				this.player.body.velocity.x = 200;
+				this.player.body.velocity.y = 200;
+			}
+			else
+			{
+				this.player.body.velocity.x = 200;
+				this.player.body.velocity.y = 0;
+			}
+			this.player.animations.play('walk_right');
+			this.prevDir = 'right'
+		}
+
+		// Run left
+		if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.LEFT)) 
+		{
+			if(k.isDown(Phaser.Keyboard.UP))
+			{
+				this.player.body.velocity.x = -400;
+				this.player.body.velocity.y = -400;
+			}
+			else if(k.isDown(Phaser.Keyboard.DOWN))
+			{
+				this.player.body.velocity.x = -400;
+				this.player.body.velocity.y = 400;
+			}
+			else{
+				this.player.body.velocity.x = -400;
+				this.player.body.velocity.y = 0;
+			}
+			this.player.animations.play('run_left');
+			this.prevDir = 'left'
+		}
+
+		// Run right
+		if (k.isDown(Phaser.Keyboard.SHIFT) && k.isDown(Phaser.Keyboard.RIGHT)) 
+		{
+			if(k.isDown(Phaser.Keyboard.UP))
+			{
+				this.player.body.velocity.x = 400;
+				this.player.body.velocity.y = -400;
+			}
+			else if(k.isDown(Phaser.Keyboard.DOWN))
+			{
+				this.player.body.velocity.x = 400;
+				this.player.body.velocity.y = 400;
+			}
+			else{
+				this.player.body.velocity.x = 400;
+				this.player.body.velocity.y = 0;
+			}
+			this.player.animations.play('run_right');
+			this.prevDir = 'right'
+		}
+
+		// Walk up
+		if (k.isDown(Phaser.Keyboard.UP))
+		{
+			if(k.isDown(Phaser.Keyboard.LEFT))
+			{
+				this.player.body.velocity.x = -200;
+				this.player.animations.play('walk_left');
+
+			}
+			else if(k.isDown(Phaser.Keyboard.RIGHT))
+			{
+				this.player.body.velocity.x = 200;
+				this.player.animations.play('walk_right');
+			}
+			else{
+				this.player.body.velocity.x = 0;
+				if(this.prevDir == 'left'){
+					this.player.animations.play('walk_left');
+				}else{
+					this.player.animations.play('walk_right');
+				}
+			}
+			this.player.body.velocity.y = -200;
+		}
+
+		// Walk down
+		if (k.isDown(Phaser.Keyboard.DOWN))
+		{
+			if(k.isDown(Phaser.Keyboard.LEFT))
+			{
+				this.player.body.velocity.x = -200;
+				this.player.animations.play('walk_left');
+
+			}
+			else if(k.isDown(Phaser.Keyboard.RIGHT))
+			{
+				this.player.body.velocity.x = 200;
+				this.player.animations.play('walk_right');
+			}
+			else{
+				this.player.body.velocity.x = 0;
+				if(this.prevDir == 'left'){
+					this.player.animations.play('walk_left');
+				}else{
+					this.player.animations.play('walk_right');
+				}
+			}
+			this.player.body.velocity.y = 200;
+		}
+
+		// idle
+		if (!k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.RIGHT) && !k.isDown(Phaser.Keyboard.UP) 
+		&& !k.isDown(Phaser.Keyboard.DOWN) && !k.isDown(Phaser.Keyboard.SPACEBAR) && !k.isDown(65) 
+		&& !k.isDown(Phaser.Keyboard.ENTER) && !k.isDown(83) && this.alive)
+		{
+			if(this.prevDir == 'left'){
+				this.player.animations.play('idle_left');
+			}else{
+				this.player.animations.play('idle_right');
+			}
+			this.player.body.velocity.x = 0;
+			this.player.body.velocity.y = 0;
+		}
+		
+		// attack
+		if (k.isDown(65))
+		{
+			if (this.prevDir == 'left')
+			{
+				this.player.animations.play('attack_left')
+			}
+			else{
+				this.player.animations.play('attack_right')
+			}
+
+			//decrease enemy health if within attack range
+		if(Math.abs(this.player.x - this.enemy.x) < 80){
+			this.enemy.health --;}
+			//decrease second enemy health if within attack range
+		if(Math.abs(this.player.x - this.enemy2.x) < 80){
+			this.enemy2.health --;}
+		}
+
+		// jump attack
+		if (k.isDown(83))
+		{
+			if (this.prevDir == 'left')
+			{
+				this.player.animations.play('jumpattack_left')
+			}
+			else{
+				this.player.animations.play('jumpattack_right')
+			}
+			this.player.body.velocity.y = -20;
+			this.player.animations.currentAnim.onLoop.add(this.endJump, this);
+
+			//decrease enemy health if within attack range
+		if(Math.abs(this.player.x - this.enemy.x) < 80){
+			this.enemy.health --;}
+
+			//decrease second enemy health if within attack range
+		if(Math.abs(this.player.x - this.enemy2.x) < 80){
+			this.enemy2.health --;}
+		}
+
+		// jump
+		if (k.isDown(Phaser.Keyboard.SPACEBAR)) 
+		{
+			if(this.prevDir == 'left')
+			{
+				this.player.animations.play('jump_left');
+			}
+			else
+			{
+				this.player.animations.play('jump_right');
+			}
+			this.player.body.velocity.y = -20;
+			this.player.animations.currentAnim.onLoop.add(this.endJump, this);
+		}
+	},
+
+	endJump: function (){
+		this.player.body.velocity.y = 550;
+		console.log("endJump");
+	},
+
+	collectCoins: function (player, coin)
+	{
+		game.global.coins +=1;
+		console.log(game.global.coins);
+		coin.kill();
+	},
 }
