@@ -283,9 +283,9 @@ var level_05 = {
 		}
 
 		// Enemies will move toward player if within range
-		this.moveTowardPlayer(this.enemy, 50, this.flag, this.walkAnim);
-		this.moveTowardPlayer(this.ghost, 60, this.flag2, this.walkAnim2);
-		this.moveTowardPlayer(this.ghost2, 70, this.flag3, this.walkAnim3);
+		this.moveTowardPlayer(this.enemy, 50);
+		this.moveTowardPlayer2(this.ghost, 60);
+		this.moveTowardPlayer3(this.ghost2, 70);
 		this.checkPlayerTransport(this.player);
 
 		// Necessary to make sure we always check player colliding with objects
@@ -343,15 +343,15 @@ var level_05 = {
 		game.state.start('gameOver');
 	},
 
-	 // Very basic move monster towards player function.
-	moveTowardPlayer: function (enemy, speed, flag, walkAnim) {
-		if(flag){
-		if (this.player.x < enemy.x && Math.abs(this.player.x - enemy.x) < 200 && walkAnim){
+	// Very basic move monster towards player function.
+	moveTowardPlayer: function (enemy, speed) {
+		if(this.flag){
+		if (this.player.x < enemy.x && Math.abs(this.player.x - enemy.x) < 200 && this.walkAnim){
 			enemy.body.velocity.x = -speed;
 			enemy.animations.play('walk_left');
 			console.log("walk left");
 			}
-		else if(Math.abs(this.player.x - enemy.x) < 300 && walkAnim) {
+		else if(Math.abs(this.player.x - enemy.x) < 300 && this.walkAnim) {
 			enemy.body.velocity.x = speed;
 			enemy.animations.play('walk_right');
 			console.log("walk right");
@@ -361,11 +361,11 @@ var level_05 = {
 		} else {
 			enemy.body.velocity.y = speed;
 		}
-		this.checkAttack(enemy, walkAnim);
+		this.checkAttack(enemy);
 		}
 	},
 
-	checkAttack: function (enemy, walkAnim)
+	checkAttack: function (enemy)
 	{
 		// Get how close players are together 
 		var xClose = Math.abs(this.player.x - enemy.x);
@@ -374,7 +374,7 @@ var level_05 = {
 		if(Math.abs(xClose + yClose) < 100){
 
 		if(this.player.x < enemy.x){
-			walkAnim = false;
+			this.walkAnim = false;
 			enemy.body.velocity.x = -50;
 			enemy.animations.play('attack_left');
 			console.log("attack left");
@@ -388,7 +388,141 @@ var level_05 = {
 		}
 		else{
 			console.log(Math.abs(xClose + yClose));
-			walkAnim = false;
+			this.walkAnim = false;
+			enemy.body.velocity.x = 50;
+			enemy.animations.play('attack_right');
+			console.log("attack_right");
+			if(Math.abs(xClose + yClose) < 120){
+				if(this.frame_counter % 50 == 0){
+					game.global.health -= 5;
+					console.log("strike right" + game.global.health);
+				}
+			}
+			this.myHealthBar.setPercent(game.global.health / 100);
+		}
+		if (this.player.y < enemy.y) {
+			enemy.body.velocity.y = -50;
+		} else {
+			enemy.body.velocity.y = 50;
+		}
+	}
+	},
+
+	moveTowardPlayer3: function (enemy, speed) {
+		if(this.flag3){
+			console.log("in MTP3");
+			console.log(this.walkAnim3);
+		if(Math.abs(this.player.x - enemy.x) < 300 && this.walkAnim3){
+			if (this.player.x < enemy.x){
+				enemy.body.velocity.x = -speed;
+				enemy.animations.play('walk_left');
+				console.log("walk left");
+				console.log(speed);
+				}
+			else{
+				enemy.body.velocity.x = speed;
+				enemy.animations.play('walk_right');
+				console.log("walk right");
+				console.log(speed);
+				}
+		}
+		if (this.player.y < enemy.y) {
+			enemy.body.velocity.y = -speed;
+		} else {
+			enemy.body.velocity.y = speed;
+		}
+		this.checkAttack3(enemy);
+		}
+	},
+
+	checkAttack3: function (enemy)
+	{
+		// Get how close players are together 
+		var xClose = Math.abs(this.player.x - enemy.x);
+		var yClose = Math.abs(this.player.y - enemy.y);
+
+		if(Math.abs(xClose + yClose) < 100){
+
+		if(this.player.x < enemy.x){
+			this.walkAnim3 = false;
+			enemy.body.velocity.x = -50;
+			enemy.animations.play('attack_left');
+			console.log("attack left");
+			if(Math.abs(xClose + yClose) < 20){
+				if(this.frame_counter % 50 == 0){
+					game.global.health -= 5;
+					console.log("strike left");
+				}
+			}
+			this.myHealthBar.setPercent(game.global.health / 100);
+		}
+		else{
+			console.log(Math.abs(xClose + yClose));
+			this.walkAnim3 = false;
+			enemy.body.velocity.x = 50;
+			enemy.animations.play('attack_right');
+			console.log("attack_right");
+			if(Math.abs(xClose + yClose) < 120){
+				if(this.frame_counter % 50 == 0){
+					game.global.health -= 5;
+					console.log("strike right" + game.global.health);
+				}
+			}
+			this.myHealthBar.setPercent(game.global.health / 100);
+		}
+		if (this.player.y < enemy.y) {
+			enemy.body.velocity.y = -50;
+		} else {
+			enemy.body.velocity.y = 50;
+		}
+	}
+	},
+
+	moveTowardPlayer2: function (enemy, speed) {
+		if(this.flag2){
+		if (this.player.x < enemy.x && Math.abs(this.player.x - enemy.x) < 200 && this.walkAnim2){
+			enemy.body.velocity.x = -speed;
+			enemy.animations.play('walk_left');
+			console.log("walk left");
+			}
+		else if(Math.abs(this.player.x - enemy.x) < 300 && this.walkAnim2) {
+			enemy.body.velocity.x = speed;
+			enemy.animations.play('walk_right');
+			console.log("walk right");
+			}
+		if (this.player.y < enemy.y) {
+			enemy.body.velocity.y = -speed;
+		} else {
+			enemy.body.velocity.y = speed;
+		}
+		this.checkAttack2(enemy);
+		}
+	},
+
+	checkAttack2: function (enemy)
+	{
+		// Get how close players are together 
+		var xClose = Math.abs(this.player.x - enemy.x);
+		var yClose = Math.abs(this.player.y - enemy.y);
+
+		if(Math.abs(xClose + yClose) < 100){
+
+		if(this.player.x < enemy.x){
+			this.walkAnim2 = false;
+			enemy.body.velocity.x = -50;
+			enemy.animations.play('attack_left');
+			console.log("attack left");
+			if(Math.abs(xClose + yClose) < 20){
+				if(this.frame_counter % 50 == 0){
+					game.global.health -= 5;
+					console.log("strike left");
+				}
+			}
+			this.myHealthBar.setPercent(game.global.health / 100);
+		}
+		else{
+			console.log(Math.abs(xClose + yClose));
+			this.walkAnim2 = false;
 			enemy.body.velocity.x = 50;
 			enemy.animations.play('attack_right');
 			console.log("attack_right");

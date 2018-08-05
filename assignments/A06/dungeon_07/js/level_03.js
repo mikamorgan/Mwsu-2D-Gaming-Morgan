@@ -203,7 +203,7 @@ var level_03 = {
 		this.frame_counter++;
 
 		this.moveTowardPlayer(this.enemy, 50);
-		this.moveTowardPlayer(this.enemy2, 70);
+		this.moveTowardPlayer2(this.enemy2, 70);
 		this.checkPlayerTransport(this.player);
 
 		// Necessary to make sure we always check player colliding with objects
@@ -232,14 +232,12 @@ var level_03 = {
 		if(this.enemy.health == 0){
 			this.enemy.kill();
 			this.enemy.destroy();
-			//this.sound.kill.play();
 			this.flag = false;
 		}
 
 		if(this.enemy2.health == 0){
 			this.enemy2.kill();
 			this.enemy2.destroy();
-			//this.sound.kill.play();
 			this.flag2 = false;
 		}
 	},
@@ -317,18 +315,22 @@ var level_03 = {
 	// Very basic move monster towards player function.
 	moveTowardPlayer2: function (enemy, speed) {
 		if(this.flag2){
-		if (this.player.x < enemy.x && Math.abs(this.player.x - enemy.x) < 200 && this.walkAnim2){
-			enemy.body.velocity.x = -speed;
-			enemy.animations.play('walk_left');
+		if(Math.abs(this.player.x - enemy.x) < 300 && this.walkAnim2){
+			if (this.player.x < enemy.x){
+				enemy.body.velocity.x = -speed;
+				enemy.animations.play('walk_left');
+				}
+			else{
+				enemy.body.velocity.x = speed;
+				enemy.animations.play('walk_right');
+				}
+		}
+		if( Math.abs(this.player.y - enemy.y) < 200){
+			if (this.player.y < enemy.y) {
+				enemy.body.velocity.y = -speed;
+			} else {
+				enemy.body.velocity.y = speed;
 			}
-		else if(Math.abs(this.player.x - enemy.x) < 300 && this.walkAnim2) {
-			enemy.body.velocity.x = speed;
-			enemy.animations.play('walk_right');
-			}
-		if (this.player.y < enemy.y) {
-			enemy.body.velocity.y = -speed;
-		} else {
-			enemy.body.velocity.y = speed;
 		}
 		
 		this.checkAttack2(enemy);
