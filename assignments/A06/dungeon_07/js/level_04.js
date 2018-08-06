@@ -154,6 +154,41 @@ var level_04 = {
 		this.portal4 = game.add.sprite(2109, 1990, 'red_portal');
 		this.portal4.alpha = 0;
 
+		// Create fruit sprites
+		this.fruit = game.add.sprite(1971, 1005, 'fruit');
+		this.fruit.animations.add('coconut', [0], 5, true);
+		this.fruit.animations.add('banana', [1], 5, true);
+		this.fruit.animations.add('orange', [2], 5, true);
+		this.fruit.animations.add('watermelon', [3], 5, true);
+		this.fruit.animations.add('grapes', [4], 5, true);
+		this.fruit.animations.add('pineapple', [5], 5, true);
+		this.fruit.animations.add('cherries', [6], 5, true);
+		this.fruit.animations.add('orange', [7], 5, true);
+		this.fruit.animations.add('pear', [8], 5, true);
+		this.fruit.animations.add('lemon', [9], 5, true);
+		this.fruit.animations.add('strawberry', [10], 5, true);
+		this.fruit.animations.play('pear');
+
+		game.physics.arcade.enable(this.fruit);
+		this.fruit.body.collideWorldBounds = true;
+
+		this.fruit2 = game.add.sprite(3403, 1864, 'fruit');
+		this.fruit2.animations.add('coconut', [0], 5, true);
+		this.fruit2.animations.add('banana', [1], 5, true);
+		this.fruit2.animations.add('orange', [2], 5, true);
+		this.fruit2.animations.add('watermelon', [3], 5, true);
+		this.fruit2.animations.add('grapes', [4], 5, true);
+		this.fruit2.animations.add('pineapple', [5], 5, true);
+		this.fruit2.animations.add('cherries', [6], 5, true);
+		this.fruit2.animations.add('orange', [7], 5, true);
+		this.fruit2.animations.add('pear', [8], 5, true);
+		this.fruit2.animations.add('lemon', [9], 5, true);
+		this.fruit2.animations.add('strawberry', [10], 5, true);
+		this.fruit2.animations.play('lemon');
+
+		game.physics.arcade.enable(this.fruit2);
+		this.fruit2.body.collideWorldBounds = true;
+
 
 		// Add walking and idle animations. Different aninmations are needed based on direction of movement.
 		this.player.animations.add('walk_left', Phaser.Animation.generateFrameNames('Walk_left', 0, 8), 20, true);
@@ -289,6 +324,9 @@ var level_04 = {
 			this.player.y = 355;}, null, this);
 		game.physics.arcade.overlap(this.player, this.coins, this.collectCoins, null, this);
 
+		game.physics.arcade.overlap(this.player, this.fruit, this.collectFruit, null, this);
+		game.physics.arcade.overlap(this.player, this.fruit2, this.collectFruit, null, this);
+
 		// Delete coins randomly generated on collision layer
 		game.physics.arcade.overlap(this.coins, this.layers.collision_layer, function (coin, layer) {
 			coin.kill();
@@ -326,6 +364,12 @@ var level_04 = {
 	// End game if player dies
 	endGame: function () {
 		game.state.start('gameOver');
+	},
+
+	// Collect fruit
+	collectFruit: function (player, fruit) {
+		fruit.destroy();
+		game.global.health += 5;
 	},
 
 		// Very basic move monster towards player function.

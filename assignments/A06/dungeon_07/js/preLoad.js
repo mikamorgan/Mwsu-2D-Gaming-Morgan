@@ -31,7 +31,7 @@ var preLoad = {
 		game.load.spritesheet('portal_smoke', 'assets/sprites/smoke.png', 128, 128);
 		game.load.spritesheet('chest','assets/images/treasure_chest_anim.png', 131, 141);
 		game.load.spritesheet('ghost', 'assets/images/ghost_sprite.png', 46.6, 48);
-		game.load.spritesheet('monster', 'assets/images/Monster.png', 100, 84);
+		game.load.spritesheet('fruit', 'assets/images/fruit.png', 36.8, 37);
 		
 		// load audio here: 
 		//game.load.audio('kill', 'assets/sounds/Ouch.ogg')
