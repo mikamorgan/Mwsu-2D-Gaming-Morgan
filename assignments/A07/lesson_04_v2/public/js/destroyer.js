@@ -22,10 +22,10 @@ var destroyer = {
 		this.earth.animations.play('spin', 10, true);
 
 		// Fire buttons
-		this.button = game.add.sprite((w - 75), (h - 75), 'button');
+		this.button = game.add.button((w - 75), (h - 75), 'button', this.actionOnClick, this);
 		this.button.scale.setTo(.2);
 
-		this.button2 = game.add.sprite((25), (h - 75), 'button');
+		this.button2 = game.add.button((25), (h - 75), 'button', this.actionOnClick, this);
 		this.button2.scale.setTo(.2);
 
 		// Score sound
@@ -70,7 +70,6 @@ var destroyer = {
 
 		// Assigns W,S,A,D keys for movement
 		this.player.assignMovementKeys(Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D);
-		this.player.assignFireKeys(Phaser.KeyCode.SPACEBAR);
 
 		this.pauseAndUnpause(game)
 
@@ -126,6 +125,11 @@ var destroyer = {
 	spawnNewPlayer: function (player) {
 		game.players.push(new Ufo(game));
 		game.players[game.players.length-1].create(player.x,player.y,0.75,0.75);
+	},
+
+	actionOnClick: function () {
+		console.log("fire");
+		this.player.assignFireKeys();
 	},
 
 	/**

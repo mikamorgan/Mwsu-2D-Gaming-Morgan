@@ -117,8 +117,8 @@ function Ufo(game_copy) {
         this.moveRightKeys.push(game.input.keyboard.addKey(right));
     };
 
-    this.assignFireKeys = function(key){
-        this.fireKeys.push(game.input.keyboard.addKey(key));
+    this.assignFireKeys = function(){
+        this.fireBullets();
     };
 
     this.move = function(){
