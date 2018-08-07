@@ -21,6 +21,13 @@ var destroyer = {
 		this.earth.animations.add('spin', 0, 48);
 		this.earth.animations.play('spin', 10, true);
 
+		// Fire buttons
+		this.button = game.add.sprite((w - 75), (h - 75), 'button');
+		this.button.scale.setTo(.2);
+
+		this.button2 = game.add.sprite((25), (h - 75), 'button');
+		this.button2.scale.setTo(.2);
+
 		// Score sound
 		this.sound.score = game.add.audio('score')
 		this.sound.score.volume = .4

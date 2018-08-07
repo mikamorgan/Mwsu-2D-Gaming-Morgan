@@ -15,6 +15,7 @@ var preload = {
 		game.load.image('space', 'assets/images/space.jpg')
 		game.load.image('bullet', 'assets/images/laserBlue02.png');
 		game.load.image('starfield', 'assets/images/starfield.png');
+		game.load.image('button', 'assets/images/button.png');
 
 		// Load all my new obstacles
 		for(i=0;i<game.globals.obstacle_icons.length;i++){
