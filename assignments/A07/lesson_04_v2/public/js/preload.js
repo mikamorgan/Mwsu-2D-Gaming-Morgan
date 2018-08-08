@@ -24,6 +24,7 @@ var preload = {
 		}
 
 		game.load.spritesheet('kaboom', 'assets/sprites/explode.png', 128, 128);
+		this.load.spritesheet('bang', 'assets/sprites/explosion.png', 100, 100, 73);
 		//game.load.spritesheet('earth', 'assets/sprites/Earth.png', 213,160,13);
 		game.load.spritesheet('earth', 'assets/sprites/Earth4.png', 85,85,48);
 		game.load.atlas('ufoAtlas','assets/sprites/ufo-sheet_2.png','assets/sprites/ufo-atlas_2.json');

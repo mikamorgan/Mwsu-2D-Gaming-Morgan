@@ -140,9 +140,30 @@ var destroyer = {
 
 			// Update health bar ratio
 			this.myHealthBar.setPercent(this.player.health / 100);
+
+			// Kill ship if health equals zero
+			if(this.player.health <= 0){
+				this.killShip(this.player.ship);
+			}
 		//}
 	},
 
+	killShip: function (player){
+		player.kill();
+
+		//creates explosion animation
+		var explosion = this.game.add.sprite (player.body.x, player.body.y, "bang")
+		explosion.anchor.setTo(0.5,0.5);
+		explosion.animations.add("bang", null, 60, false, true);
+		explosion.animations.play("bang");
+
+		//end game after explosion plays
+		explosion.animations.currentAnim.onComplete.add(this.endGame, this);
+	},
+
+	endGame: function(){
+		game.state.start('gameOver');
+	},
 	/**
 	 * Spawn New Player
 	 */
@@ -219,13 +240,8 @@ var destroyer = {
 	 * Kills player. Things commented out for debugging.
 	 */
 	killPlayer: function (player) {
-		//issues with this
-		//game.plugins.screenShake.shake(20);
 		this.sound.kill.play('', 0, 0.5, false)
-		//player.kill();
-		//game.state.start('gameOver');
-
-		this.player.health -= 5;
+		this.player.health--;
 	},
 	/**
 	 * Source: https://phaser.io/examples/v2/games/invaders
