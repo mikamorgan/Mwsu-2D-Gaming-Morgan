@@ -24,10 +24,10 @@ var destroyer = {
 
 		//Healthbar
 		this.barConfig = {
-            width: 50,
-            height: 4,
-            x: (this.player.x),
-            y: (this.player.y + 35),
+            width: 70,
+            height: 8,
+            x: 45,
+            y: 100,
             bg: {
                 color: '#FF0000'
             },
@@ -140,9 +140,6 @@ var destroyer = {
 
 			// Update health bar ratio
 			this.myHealthBar.setPercent(this.player.health / 100);
-
-			// Display health bar
-			this.myHealthBar.setPosition(this.player.x, this.player.y - 35);
 		//}
 	},
 
