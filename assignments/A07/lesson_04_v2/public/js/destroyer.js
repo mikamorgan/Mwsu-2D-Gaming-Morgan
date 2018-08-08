@@ -65,7 +65,7 @@ var destroyer = {
 
 		//  An explosion pool that gets attached to each icon
 		this.explosions = game.add.group();
-		this.explosions.createMultiple(10, 'kaboom');
+		this.explosions.createMultiple(10, 'bang');
 		this.explosions.forEach(this.setupObstacles, this);
 
 		// Player
@@ -224,7 +224,7 @@ var destroyer = {
 	setupObstacles: function (obstacle) {
 		obstacle.anchor.x = 0.5;
 		obstacle.anchor.y = 0.5;
-		obstacle.animations.add('kaboom');
+		obstacle.animations.add('bang');
 	},
 
 	/**
@@ -253,7 +253,7 @@ var destroyer = {
 		obstacle.kill();
 		var explosion = this.explosions.getFirstExists(false);
 		explosion.reset(obstacle.body.x, obstacle.body.y);
-		explosion.play('kaboom', 30, false, true);
+		explosion.play('bang', 30, false, true);
 		this.item_destroyed = true;
 	},
 
