@@ -4,8 +4,11 @@ var destroyer = {
 
 		//Client.sendNewPlayerRequest();
 
-		this.player = new Ufo(game);
-		this.player.health = 100;
+		this.player1 = new Ufo(game);
+		this.player1.health = 100;
+
+		this.player2 = new Ufo(game);
+		this.player2.health = 100;
 
 		w = game.width // Game width and height for convenience
 		h = game.height
@@ -37,8 +40,24 @@ var destroyer = {
             animationDuration: 200,
             flipped: false
 		};
+
+		this.barConfig2 = {
+            width: 70,
+            height: 8,
+            x: (w - 100),
+            y: 100,
+            bg: {
+                color: '#FF0000'
+            },
+            bar: {
+                color: '#00FF00'
+            },
+            animationDuration: 200,
+            flipped: false
+		};
 		
-        this.myHealthBar = new HealthBar(this.game, this.barConfig);
+		this.myHealthBar = new HealthBar(this.game, this.barConfig);
+		this.myHealthBar2 = new HealthBar(this.game, this.barConfig2);
 
 		// Fire buttons
 		this.button = game.add.button((w - 75), (h - 75), 'button', this.actionOnClick, this);
@@ -70,8 +89,8 @@ var destroyer = {
 
 		// Player
 		//calls the create method of the ufo object
-		this.player.create(randomInt(0,game.width), randomInt(0,game.height/2), 0.75, 0.75); 
-
+		this.player1.create(randomInt(0,game.width), randomInt(0,game.height/2), 0.75, 0.75); 
+		this.player2.create(randomInt(0,game.width), randomInt(0,game.height/2), 0.75, 0.75);
 
 		// Score label
 		this.bmpText = game.add.bitmapText(game.width / 2, 100, 'fontUsed', '', 150);
@@ -81,24 +100,26 @@ var destroyer = {
 		///// Tracking keyboard inputs /////////////
 
 		// Fire the ufo big laser when the 'X' key is pressed
-		laserFire = this.input.keyboard.addKey(Phaser.Keyboard.X);
-		laserFire.onDown.add(this.player.startLaser, this.player);
+		//laserFire = this.input.keyboard.addKey(Phaser.Keyboard.X);
+		//laserFire.onDown.add(this.player.startLaser, this.player);
 
 		// Assigns arrow keys for movement
-		this.player.assignMovementKeys(38, 40, 37, 39);
+		this.player1.assignMovementKeys(38, 40, 37, 39);
+		this.player2.assignMovementKeys(87, 83, 65, 68);
 
 		// Assigns W,S,A,D keys for movement
-		this.player.assignMovementKeys(Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D);
+		this.player1.assignMovementKeys(Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT);
+		this.player2.assignMovementKeys(Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D);
+
+		// Assign fire keys
+		this.player1.assignFireKeys(Phaser.KeyCode.SPACEBAR);
+		this.player2.assignFireKeys(Phaser.KeyCode.SHIFTKEY);
 
 		this.pauseAndUnpause(game)
 
 	},
 
 	update: function () {
-
-		//if (game.num_other_players > 0) {
-
-		console.log(this.player.health);
 
 			// Place score on game screen
 			this.bmpText.text = game.globals.score
@@ -107,10 +128,12 @@ var destroyer = {
 			this.starfield.tilePosition.y -= 2;
 
 			// Check for overlap between game ship and obstacles
-			game.physics.arcade.overlap(this.player.ship, this.obstacles, this.killPlayer, null, this)
+			game.physics.arcade.overlap(this.player1.ship, this.obstacles, this.killPlayer, null, this);
+			game.physics.arcade.overlap(this.player2.ship, this.obstacles, this.killPlayer2, null, this);
 
 			// Check for overlap between bullets and obstacles
-			game.physics.arcade.overlap(this.player.bullets, this.obstacles, this.destroyItem, null, this);
+			game.physics.arcade.overlap(this.player1.bullets, this.obstacles, this.destroyItem, null, this);
+			game.physics.arcade.overlap(this.player2.bullets, this.obstacles, this.destroyItem, null, this);
 
 			if (this.item_destroyed) {
 				// Check to see if we score any points
@@ -134,16 +157,22 @@ var destroyer = {
 				this.spawnObstacle(game.rnd.integerInRange(32, game.width - 32), game.height, speed = obstacle_speed, 0.5, 0.5)
 			}
 
-			this.player.move();
+			this.player1.move();
+			this.player2.move();
 
 			frame_counter++;
 
 			// Update health bar ratio
-			this.myHealthBar.setPercent(this.player.health / 100);
+			this.myHealthBar.setPercent(this.player1.health / 100);
+			this.myHealthBar2.setPercent(this.player2.health / 100);
 
 			// Kill ship if health equals zero
-			if(this.player.health <= 0){
-				this.killShip(this.player.ship);
+			if(this.player1.health <= 0){
+				this.killShip(this.player1.ship);
+			}
+
+			if(this.player2.health <= 0){
+				this.killShip(this.player2.ship);
 			}
 		//}
 	},
@@ -239,9 +268,14 @@ var destroyer = {
 	/**
 	 * Kills player. Things commented out for debugging.
 	 */
-	killPlayer: function (player) {
+	killPlayer: function () {
 		this.sound.kill.play('', 0, 0.5, false)
-		this.player.health--;
+		this.player1.health--;
+	},
+
+	killPlayer2: function () {
+		this.sound.kill.play('', 0, 0.5, false)
+		this.player2.health--;
 	},
 	/**
 	 * Source: https://phaser.io/examples/v2/games/invaders
