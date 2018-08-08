@@ -5,6 +5,7 @@ var destroyer = {
 		//Client.sendNewPlayerRequest();
 
 		this.player = new Ufo(game);
+		this.player.health = 100;
 
 		w = game.width // Game width and height for convenience
 		h = game.height
@@ -20,6 +21,24 @@ var destroyer = {
 
 		this.earth.animations.add('spin', 0, 48);
 		this.earth.animations.play('spin', 10, true);
+
+		//Healthbar
+		this.barConfig = {
+            width: 50,
+            height: 4,
+            x: (this.player.x),
+            y: (this.player.y + 35),
+            bg: {
+                color: '#FF0000'
+            },
+            bar: {
+                color: '#00FF00'
+            },
+            animationDuration: 200,
+            flipped: false
+		};
+		
+        this.myHealthBar = new HealthBar(this.game, this.barConfig);
 
 		// Fire buttons
 		this.button = game.add.button((w - 75), (h - 75), 'button', this.actionOnClick, this);
@@ -79,6 +98,8 @@ var destroyer = {
 
 		//if (game.num_other_players > 0) {
 
+		console.log(this.player.health);
+
 			// Place score on game screen
 			this.bmpText.text = game.globals.score
 
@@ -116,6 +137,12 @@ var destroyer = {
 			this.player.move();
 
 			frame_counter++;
+
+			// Update health bar ratio
+			this.myHealthBar.setPercent(this.player.health / 100);
+
+			// Display health bar
+			this.myHealthBar.setPosition(this.player.x, this.player.y - 35);
 		//}
 	},
 
@@ -198,8 +225,10 @@ var destroyer = {
 		//issues with this
 		//game.plugins.screenShake.shake(20);
 		this.sound.kill.play('', 0, 0.5, false)
-		player.kill();
-		game.state.start('gameOver');
+		//player.kill();
+		//game.state.start('gameOver');
+
+		this.player.health -= 5;
 	},
 	/**
 	 * Source: https://phaser.io/examples/v2/games/invaders

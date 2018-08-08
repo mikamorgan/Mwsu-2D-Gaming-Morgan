@@ -463,8 +463,6 @@ var level_01 = {
 		// and plays the proper animation. It sets the prevDir so we can
 		// face the correct way when stopped.
 
-		// Display health bar
-		this.myHealthBar.setPosition(this.player.x, this.player.y - 35);
 
 		// Walk left
 		if (k.isDown(Phaser.Keyboard.LEFT) && !k.isDown(Phaser.Keyboard.SHIFT))
