@@ -63,7 +63,7 @@ var destroyer = {
 		this.button = game.add.button((w - 75), (h - 75), 'button', this.actionOnClick, this);
 		this.button.scale.setTo(.2);
 
-		this.button2 = game.add.button((25), (h - 75), 'button', this.actionOnClick, this);
+		this.button2 = game.add.button((25), (h - 75), 'button', this.actionOnClick2, this);
 		this.button2.scale.setTo(.2);
 
 		// Score sound
@@ -121,9 +121,6 @@ var destroyer = {
 
 	update: function () {
 
-			// Place score on game screen
-			this.bmpText.text = game.globals.score
-
 			// Move background to look like space is moving
 			this.starfield.tilePosition.y -= 2;
 
@@ -135,13 +132,6 @@ var destroyer = {
 			game.physics.arcade.overlap(this.player1.bullets, this.obstacles, this.destroyItem, null, this);
 			game.physics.arcade.overlap(this.player2.bullets, this.obstacles, this.destroyItem, null, this);
 
-			if (this.item_destroyed) {
-				// Check to see if we score any points
-				// needs changed since we added bullets
-				game.globals.score += this.scorePoint();
-				this.item_destroyed = false;
-			}
-
 			spawn_rate = 100 - game.globals.score; // how fast to add new obstacles to screen (smaller value = more obstacles)
 			obstacle_speed = game.globals.score * 1.5 + 200; // how fast should each obstacle move
 
@@ -152,8 +142,6 @@ var destroyer = {
 
 			// Spawn obstacles
 			if (frame_counter % spawn_rate == 0) {
-				//console.log(spawn_rate);
-				//console.log(obstacle_speed);
 				this.spawnObstacle(game.rnd.integerInRange(32, game.width - 32), game.height, speed = obstacle_speed, 0.5, 0.5)
 			}
 
@@ -203,7 +191,12 @@ var destroyer = {
 
 	actionOnClick: function () {
 		console.log("fire");
-		this.player.assignFireKeys();
+		this.player1.buttonClick();
+	},
+
+	actionOnClick2: function () {
+		console.log("fire");
+		this.player2.buttonClick();
 	},
 
 	/**

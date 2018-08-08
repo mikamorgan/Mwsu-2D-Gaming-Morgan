@@ -121,6 +121,10 @@ function Ufo(game_copy) {
         this.fireKeys.push(game.input.keyboard.addKey(key))
     };
 
+    this.buttonClick = function(){
+        this.fireBullets();
+    };
+
     this.move = function(){
 
         // Grab some booleans based on keys being pressed
@@ -129,14 +133,6 @@ function Ufo(game_copy) {
         up = this._goUp();
         down = this._goDown();
         fire = this._fireBullets();
-        tap = game.input.activePointer.isDown;
-
-    	// Left mouse is down or finger on screen
-		if (tap) {
-			this._move();
-		}else{
-			this._zeroAngle();
-		}
 
 		// The left arrow is pressed 
 		if (left){
