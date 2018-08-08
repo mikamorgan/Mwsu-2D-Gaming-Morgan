@@ -113,7 +113,7 @@ var destroyer = {
 
 		// Assign fire keys
 		this.player1.assignFireKeys(Phaser.KeyCode.SPACEBAR);
-		this.player2.assignFireKeys(Phaser.KeyCode.SHIFTKEY);
+		this.player2.assignFireKeys(Phaser.KeyCode.SHIFT);
 
 		this.pauseAndUnpause(game)
 
