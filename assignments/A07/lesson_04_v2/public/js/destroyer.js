@@ -66,10 +66,6 @@ var destroyer = {
 		this.button2 = game.add.button((25), (h - 75), 'button', this.actionOnClick2, this);
 		this.button2.scale.setTo(.2);
 
-		// Score sound
-		this.sound.score = game.add.audio('score')
-		this.sound.score.volume = .4
-
 		// Death sound
 		this.sound.kill = game.add.audio('kill')
 
@@ -92,30 +88,23 @@ var destroyer = {
 		this.player1.create(randomInt(0,game.width), randomInt(0,game.height/2), 0.75, 0.75); 
 		this.player2.create(randomInt(0,game.width), randomInt(0,game.height/2), 0.75, 0.75);
 
-		// Score label
-		this.bmpText = game.add.bitmapText(game.width / 2, 100, 'fontUsed', '', 150);
-		this.bmpText.anchor.setTo(.5, .5)
-		this.bmpText.scale.setTo(.3, .3)
-
 		///// Tracking keyboard inputs /////////////
 
-		// Fire the ufo big laser when the 'X' key is pressed
-		//laserFire = this.input.keyboard.addKey(Phaser.Keyboard.X);
-		//laserFire.onDown.add(this.player.startLaser, this.player);
-
 		// Assigns arrow keys for movement
-		this.player1.assignMovementKeys(38, 40, 37, 39);
-		this.player2.assignMovementKeys(87, 83, 65, 68);
+		this.player1.assignMovementKeys(87, 83, 65, 68);
+		this.player2.assignMovementKeys(38, 40, 37, 39);
 
 		// Assigns W,S,A,D keys for movement
-		this.player1.assignMovementKeys(Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT);
-		this.player2.assignMovementKeys(Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D);
-
+		this.player1.assignMovementKeys(Phaser.Keyboard.W, Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D);
+		this.player2.assignMovementKeys(Phaser.Keyboard.UP, Phaser.Keyboard.DOWN, Phaser.Keyboard.LEFT, Phaser.Keyboard.RIGHT);
+		
 		// Assign fire keys
 		this.player1.assignFireKeys(Phaser.KeyCode.SPACEBAR);
 		this.player2.assignFireKeys(Phaser.KeyCode.SHIFT);
 
 		this.pauseAndUnpause(game)
+
+		this.flag = true;
 
 	},
 
@@ -157,6 +146,7 @@ var destroyer = {
 			// Kill ship if health equals zero
 			if(this.player1.health <= 0){
 				this.killShip(this.player1.ship);
+				this.flag = false;
 			}
 
 			if(this.player2.health <= 0){
@@ -179,7 +169,16 @@ var destroyer = {
 	},
 
 	endGame: function(){
-		game.state.start('gameOver');
+		// Player one won
+		console.log(this.flag);
+		if(this.flag == true){
+			game.state.start('gameOver');
+
+		}
+		// Player two won
+		else{
+			game.state.start('gameOver2');
+		}
 	},
 	/**
 	 * Spawn New Player
@@ -190,12 +189,10 @@ var destroyer = {
 	},
 
 	actionOnClick: function () {
-		console.log("fire");
 		this.player1.buttonClick();
 	},
 
 	actionOnClick2: function () {
-		console.log("fire");
 		this.player2.buttonClick();
 	},
 
@@ -250,15 +247,6 @@ var destroyer = {
 	},
 
 	/**
-	 * Determines score. Needs changed
-	 */
-	scorePoint: function () {
-		// silly but wanted a function in case points started
-		// to change based on logic.
-		return 1;
-	},
-
-	/**
 	 * Kills player. Things commented out for debugging.
 	 */
 	killPlayer: function () {
@@ -289,7 +277,6 @@ var destroyer = {
 	 * not used for this game
 	 */
 	onDown: function (pointer) {
-		//console.log(pointer);
 	},
 
 	/**

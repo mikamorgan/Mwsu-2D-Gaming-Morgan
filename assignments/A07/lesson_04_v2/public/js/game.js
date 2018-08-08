@@ -25,6 +25,7 @@ game.state.add("preload", preload);
 game.state.add("mainMenu", mainMenu);
 game.state.add("destroyer", destroyer);
 game.state.add("gameOver", gameOver);
+game.state.add("gameOver2", gameOver2);
 game.state.start("boot");
 
 

@@ -1,7 +1,7 @@
-var gameOver = {
+var gameOver2 = {
 
 	create: function () {
-		console.log("gameover.js");
+		console.log("gameover2.js");
 		game.stage.backgroundColor = game.globals.bg_color;
 		// Bg image
 		this.bg = game.add.image(0, 0, 'space');
@@ -19,13 +19,12 @@ var gameOver = {
 			y: h / 2 - 80
 		}, 1000, Phaser.Easing.Bounce.Out).start()
 
-			var message = game.add.bitmapText(w / 2, -100, 'fontUsed', '', 30)
-			message.text = 'Player One Wins!!'
-			message.anchor.setTo(0.5, 0.5)
-			game.add.tween(message).to({
-				y: h / 2
-			}, 1000, Phaser.Easing.Bounce.Out).start()
-
+		var message = game.add.bitmapText(w / 2, -100, 'fontUsed', '', 30)
+		message.text = 'Player Two Wins!!'
+		message.anchor.setTo(0.5, 0.5)
+		game.add.tween(message).to({
+			y: h / 2
+		}, 1000, Phaser.Easing.Bounce.Out).start()
 
 		game.input.onDown.add(this.listener, this)
 	},
